@@ -146,4 +146,7 @@ body {
   .flex-start {
     @apply flex justify-start items-center;
   }
+  .invert-colors {
+    @apply invert-0 dark:invert;
+  }
 }
