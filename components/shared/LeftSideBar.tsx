@@ -9,11 +9,11 @@ const LeftSideBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-6 border-r border-r-slate-100 py-10 dark:border-r-zinc-900">
+    <div className="sticky left-0 top-0 flex min-h-screen w-[200px] flex-col gap-6 border-r border-r-slate-100 py-10 dark:border-r-zinc-900">
       {leftSideBar.map((item) => (
         <Link
           key={item.href}
-          className={`flex min-w-[200px] items-center gap-4 px-6 py-4 ${pathname === item.href && "bg-primary text-white"}`}
+          className={`flex items-center gap-4 px-6 py-4 ${pathname === item.href && "bg-primary text-white"}`}
           href={item.href}
         >
           <Image
@@ -23,7 +23,7 @@ const LeftSideBar = () => {
             alt={item.label}
             className={`${pathname === item.href ? "invert" : "invert-colors"} `}
           />
-          <p>{item.label}</p>
+          <p className="body-semibold">{item.label}</p>
         </Link>
       ))}
     </div>

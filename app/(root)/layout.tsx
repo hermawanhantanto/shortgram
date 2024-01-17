@@ -8,9 +8,14 @@ const Layout = ({ children }: PropsWithChildren) => {
     <main>
       <Navbar />
       <section className="flex justify-between">
-        <LeftSideBar />
+        <div className="max-lg:hidden">
+          <LeftSideBar />
+        </div>
+
         <div className="flex w-full flex-1">{children}</div>
-        <RightSideBar />
+        <div className="max-lg:hidden">
+          <RightSideBar />
+        </div>
       </section>
     </main>
   );
