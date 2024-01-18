@@ -4,9 +4,31 @@ export interface FilterType {
   value: string;
 }
 
-export interface createContentParams {
+export interface CreateContentParams {
   caption: string;
   author: string;
   image: string;
   tags: string[];
+}
+
+export interface CreateUserParams {
+  clerkId: string;
+  name: string;
+  username: string | null;
+  email: string;
+  picture: string;
+}
+export interface UpdateUserParams {
+  clerkId: string;
+  updateData: {
+    name: string;
+    username: string | null;
+    email: string;
+    picture: string;
+  };
+  path: string;
+}
+
+export interface DeleteUserParams {
+  clerkId: string;
 }

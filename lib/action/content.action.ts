@@ -1,10 +1,10 @@
 "use server";
-import { createContentParams } from "@/types";
+import { CreateContentParams } from "@/types";
 import { connectDB } from "../mongoose";
 import Content from "@/database/content.model";
 import Tag from "@/database/tags.model";
 
-export async function createContent(params: createContentParams) {
+export async function createContent(params: CreateContentParams) {
   try {
     await connectDB();
     const { author, caption, image, tags } = params;
