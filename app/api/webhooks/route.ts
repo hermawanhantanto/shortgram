@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       evt.data;
 
     // Do something with the data
-    const mongoUser = await createUser({
+    const user = await createUser({
       clerkId: id,
       name: `${first_name} ${last_name}`,
       username,
@@ -66,14 +66,14 @@ export async function POST(req: Request) {
       picture: image_url,
     });
 
-    return NextResponse.json(mongoUser, { status: 201 });
+    return NextResponse.json({ message: "OK", user });
   }
 
   if (eventType === "user.updated") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    await updateUser({
+    const user = await updateUser({
       clerkId: id,
       updateData: {
         name: `${first_name} ${last_name}`,
@@ -84,18 +84,18 @@ export async function POST(req: Request) {
       path: `/profile/${id}`,
     });
 
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({ message: "OK", user });
   }
 
   if (eventType === "user.deleted") {
     const { id } = evt.data;
 
-    await deleteUser({
+    const user = await deleteUser({
       clerkId: id!,
     });
 
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({ message: "OK", user });
   }
 
-  return NextResponse.json({}, { status: 200 });
+  return NextResponse.json({ message: "OK" });
 }

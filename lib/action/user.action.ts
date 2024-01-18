@@ -51,7 +51,8 @@ export async function deleteUser(params: DeleteUserParams) {
   try {
     await connectDB();
     const { clerkId } = params;
-    await User.findOneAndDelete({ clerkId });
+    const deleteUser = await User.findOneAndDelete({ clerkId });
+    return deleteUser;
   } catch (error) {
     console.log(error);
     throw error;
