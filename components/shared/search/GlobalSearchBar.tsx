@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const GlobalSearchBar = () => {
   return (
-    <div className="hidden gap-2 rounded-xl bg-gray-50 px-5 py-2.5 dark:bg-zinc-900 sm:flex">
+    <div className="hidden gap-2 rounded-xl bg-transparent px-5 py-2.5 sm:flex">
       <Input
         type="search"
         className="min-h-[46px] shadow-sm"

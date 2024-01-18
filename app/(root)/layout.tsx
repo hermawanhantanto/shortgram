@@ -12,7 +12,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <LeftSideBar />
         </div>
 
-        <div className="flex w-full flex-1">{children}</div>
+        <main className="flex w-full flex-1 p-12">{children}</main>
         <div className="max-lg:hidden">
           <RightSideBar />
         </div>
