@@ -2,13 +2,17 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
-const SearchBar = () => {
+interface Props {
+  placeholder: string;
+}
+
+const SearchBar = ({ placeholder }: Props) => {
   return (
     <div className="flex gap-2 rounded-xl bg-secondary px-5 py-1.5 shadow">
       <Input
         type="search"
         className="min-h-[46px] border-none bg-transparent "
-        placeholder="Search for globally"
+        placeholder={placeholder}
       />
       <Image
         src="/assets/icons/search.svg"

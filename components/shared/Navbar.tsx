@@ -1,9 +1,8 @@
-import React from "react";
-import GlobalSearchBar from "./search/GlobalSearchBar";
-import { ModeToggle } from "../theme/ThemeToogle";
 import { UserButton, auth } from "@clerk/nextjs";
 import Link from "next/link";
+import { ModeToggle } from "../theme/ThemeToogle";
 import MobileNav from "./MobileNav";
+import GlobalSearchBar from "./search/GlobalSearchBar";
 
 const Navbar = () => {
   const { userId } = auth();

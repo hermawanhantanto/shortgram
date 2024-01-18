@@ -1,3 +1,5 @@
+import { FilterType } from "@/types";
+
 export const leftSideBar = [
   {
     label: "Home",
@@ -22,6 +24,34 @@ export const leftSideBar = [
   {
     label: "Upload",
     icon: "/assets/icons/upload.svg",
-    href: "/upload",
+    href: "/upload-content",
+  },
+];
+
+export const homeFilter: FilterType[] = [
+  {
+    id: 1,
+    label: "Newest",
+    value: "newest",
+  },
+  {
+    id: 2,
+    label: "Recommended",
+    value: "recommended",
+  },
+  {
+    id: 3,
+    label: "Most Viewed",
+    value: "most-viewed",
+  },
+  {
+    id: 4,
+    label: "Most Liked",
+    value: "most-liked",
+  },
+  {
+    id: 5,
+    label: "Most Commented",
+    value: "most-commented",
   },
 ];
