@@ -19,6 +19,7 @@ import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { Badge } from "../ui/badge";
+import { toast } from "sonner";
 
 interface CloudinaryResult {
   public_id: string;
@@ -37,9 +38,13 @@ const ContentForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof contentSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    alert(values);
+    try {
+      console.log(values);
+      toast.success("Content has been uploaded");
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   const handleTags = (values: string) => {

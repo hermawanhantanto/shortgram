@@ -16,8 +16,8 @@ const ContentSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   like: [{ type: Schema.Types.ObjectId, ref: "User" }],
   image: { type: String, required: true },
-  tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
-  comment: [{ type: Schema.Types.ObjectId, ref: "Comment", required: true }],
+  tags: [{ type: Schema.Types.ObjectId, ref: "Tag"}],
+  comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, default: Date.now },
 });
 

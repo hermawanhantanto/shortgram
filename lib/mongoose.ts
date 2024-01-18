@@ -15,7 +15,7 @@ export async function connectDB() {
     }
 
     await mongoose.connect(process.env.MONGODB_URL, {
-      dbName: "belanjaku",
+      dbName: "shortgram",
     });
 
     isConnected = true;
