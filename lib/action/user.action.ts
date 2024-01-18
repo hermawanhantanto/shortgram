@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 export async function createUser(params: CreateUserParams) {
   try {
-    await connectDB();
+    connectDB();
     const { clerkId, name, username, email, picture } = params;
     const user = await User.create({
       clerkId,
@@ -24,7 +24,7 @@ export async function createUser(params: CreateUserParams) {
 
 export async function getAllUsers() {
   try {
-    await connectDB();
+    connectDB();
     const users = await User.find();
     return users;
   } catch (error) {
@@ -35,7 +35,7 @@ export async function getAllUsers() {
 
 export async function updateUser(params: UpdateUserParams) {
   try {
-    await connectDB();
+    connectDB();
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
