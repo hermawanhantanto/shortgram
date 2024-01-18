@@ -33,6 +33,17 @@ export async function getAllUsers() {
   }
 }
 
+export async function getUserByClerkId(clerkId: string) {
+  try {
+    connectDB();
+    const user = await User.findOne({ clerkId });
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function updateUser(params: UpdateUserParams) {
   try {
     connectDB();

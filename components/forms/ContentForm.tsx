@@ -20,12 +20,18 @@ import { Button } from "../ui/button";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { Badge } from "../ui/badge";
 import { toast } from "sonner";
+import { createContent } from "@/lib/action/content.action";
+import { useRouter } from "next/navigation";
 
 interface CloudinaryResult {
   public_id: string;
 }
 
-const ContentForm = () => {
+interface Props {
+  mongoUser: string;
+}
+
+const ContentForm = ({ mongoUser }: Props) => {
   const editorRef = useRef(null);
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof contentSchema>>({
@@ -36,11 +42,25 @@ const ContentForm = () => {
     },
     resolver: zodResolver(contentSchema),
   });
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof contentSchema>) {
+  async function onSubmit(values: z.infer<typeof contentSchema>) {
     try {
-      console.log(values);
-      toast.success("Content has been uploaded");
+      const { caption, tags, image } = values;
+
+      const user = await createContent({
+        caption,
+        author: JSON.parse(mongoUser),
+        tags,
+        image,
+      });
+
+      if (!user) {
+        toast("Something went wrong, please try again!");
+      }
+
+      toast("Succes upload your content");
+      router.push("/");
     } catch (error) {
       console.log(error);
       throw error;

@@ -6,7 +6,7 @@ import Tag from "@/database/tags.model";
 
 export async function createContent(params: CreateContentParams) {
   try {
-    await connectDB();
+    connectDB();
     const { author, caption, image, tags } = params;
     const content = await Content.create({
       caption,
@@ -25,12 +25,11 @@ export async function createContent(params: CreateContentParams) {
       tagDocuments.push(existingTags._id);
     }
 
-    content.tags = tagDocuments;
-    await content.save();
-
+    await Content.findByIdAndUpdate(content._id, {
+      $push: { tags: { $each: tagDocuments } },
+    });
     // add reputation to author
-
-    return { content };
+    return content;
   } catch (error) {
     console.log(error);
     throw error;
