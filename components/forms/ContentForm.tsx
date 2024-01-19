@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,9 @@ import { Badge } from "../ui/badge";
 import { toast } from "sonner";
 import { createContent } from "@/lib/action/content.action";
 import { useRouter } from "next/navigation";
+import Spinner from "../shared/Spinner";
+import { revalidatePath } from "next/cache";
+import router from "next/router";
 
 interface CloudinaryResult {
   public_id: string;
@@ -43,9 +46,11 @@ const ContentForm = ({ mongoUser }: Props) => {
     resolver: zodResolver(contentSchema),
   });
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function onSubmit(values: z.infer<typeof contentSchema>) {
     try {
+      setIsSubmitting(true);
       const { caption, tags, image } = values;
 
       const user = await createContent({
@@ -64,6 +69,8 @@ const ContentForm = ({ mongoUser }: Props) => {
     } catch (error) {
       console.log(error);
       throw error;
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -158,7 +165,7 @@ const ContentForm = ({ mongoUser }: Props) => {
                       src={field.value}
                       width={270}
                       height={180}
-                      alt="content image"
+                      alt="content-image"
                     />
                   )}
                   <CldUploadWidget
@@ -223,8 +230,12 @@ const ContentForm = ({ mongoUser }: Props) => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="rounded text-white">
-          Submit
+        <Button
+          type="submit"
+          className="rounded text-white"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? <Spinner /> : "Submit"}
         </Button>
       </form>
     </Form>

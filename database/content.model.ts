@@ -9,6 +9,7 @@ export interface IContent extends Document {
   tags: Schema.Types.ObjectId;
   comment: Schema.Types.ObjectId[];
   createdAt: Date;
+  views: number;
 }
 
 const ContentSchema = new Schema({
@@ -16,9 +17,10 @@ const ContentSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   like: [{ type: Schema.Types.ObjectId, ref: "User" }],
   image: { type: String, required: true },
-  tags: [{ type: Schema.Types.ObjectId, ref: "Tag"}],
+  tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
   comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, default: Date.now },
+  views: { type: Number, default: 0 },
 });
 
 const Content = models.Content || model("Content", ContentSchema);

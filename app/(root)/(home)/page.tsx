@@ -1,9 +1,14 @@
 import Filter from "@/components/shared/Filter";
+import NoResult from "@/components/shared/NoResult";
+import ContentCard from "@/components/shared/cards/ContentCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { homeFilter } from "@/constant";
+import { getAllContents } from "@/lib/action/content.action";
+import { timeAgo } from "@/lib/utils";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const contents = await getAllContents();
   return (
     <div className="flex w-full flex-col">
       <div className="flex justify-between max-sm:flex-col-reverse sm:items-center">
@@ -23,6 +28,19 @@ export default function Home() {
 
         <Filter filter={homeFilter} />
       </div>
+      {contents?.length > 0 ? (
+        <div className="mt-10 grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+          {contents?.map((content: any, index) => (
+            <ContentCard
+              key={index}
+              content={JSON.stringify(content)}
+              timeago={timeAgo(content.createdAt)}
+            />
+          ))}
+        </div>
+      ) : (
+        <NoResult />
+      )}
     </div>
   );
 }

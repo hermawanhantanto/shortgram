@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const SearchBar = () => {
   return (
-    <div className="flex gap-2 rounded-xl bg-secondary px-5 py-1.5 shadow">
+    <div className="flex gap-2 rounded-xl bg-secondary px-5 py-1.5 shadow max-sm:hidden">
       <Input
         type="search"
         className="min-h-[46px] border-none bg-transparent "

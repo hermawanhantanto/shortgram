@@ -12,7 +12,9 @@ const Layout = ({ children }: PropsWithChildren) => {
           <LeftSideBar />
         </div>
 
-        <div className="mx-auto w-[1000px] justify-center p-12">{children}</div>
+        <div className="mx-auto w-[1000px] justify-center p-6 sm:p-12">
+          {children}
+        </div>
         <div className="max-lg:hidden">
           <RightSideBar />
         </div>

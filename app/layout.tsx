@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ReactNode } from "react";
-import "./globals.css";
-import { ThemeProvider } from "@/context/theme-provider";
-import { Toaster } from "@/components/ui/sonner"
 
-const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "@/context/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+
+import "./globals.css";
+import "../styles/prismjs.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
-  title: "Shootgram",
+  title: "Shortgram",
   description: "A social media platform",
 };
 
