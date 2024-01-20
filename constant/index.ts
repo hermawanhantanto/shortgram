@@ -55,3 +55,16 @@ export const homeFilter: FilterType[] = [
     value: "most-commented",
   },
 ];
+
+export const commentsFilter: FilterType[] = [
+  {
+    id: 1,
+    label: "Newest",
+    value: "newest",
+  },
+  {
+    id: 2,
+    label: "Most Liked",
+    value: "most-liked",
+  },
+];

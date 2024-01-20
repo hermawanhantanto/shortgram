@@ -1,9 +1,4 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Editor } from "@tinymce/tinymce-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { contentSchema } from "@/app/validation";
 import {
   Form,
@@ -15,17 +10,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useTheme } from "next-themes";
-import { Button } from "../ui/button";
-import { CldImage, CldUploadWidget } from "next-cloudinary";
-import { Badge } from "../ui/badge";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 import { createContent } from "@/lib/action/content.action";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
 import Spinner from "../shared/Spinner";
-import { revalidatePath } from "next/cache";
-import router from "next/router";
-
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 interface CloudinaryResult {
   public_id: string;
 }
@@ -35,8 +31,7 @@ interface Props {
 }
 
 const ContentForm = ({ mongoUser }: Props) => {
-  const editorRef = useRef(null);
-  const { theme } = useTheme();
+  
   const form = useForm<z.infer<typeof contentSchema>>({
     defaultValues: {
       caption: "",
@@ -104,44 +99,8 @@ const ContentForm = ({ mongoUser }: Props) => {
                 Caption<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Editor
-                  apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                  onInit={(editor) => {
-                    // @ts-ignore
-                    editorRef.current = editor;
-                  }}
-                  onBlur={field.onBlur}
-                  onEditorChange={(content) => field.onChange(content)}
-                  initialValue={""}
-                  init={{
-                    height: 350,
-                    menubar: false,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "codesample",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                    ],
-                    toolbar:
-                      "undo redo | " +
-                      "codesample | bold italic forecolor | alignleft aligncenter |" +
-                      "alignright alignjustify | bullist numlist",
-                    content_style: "body { font-family:Inter; font-size:16px }",
-                    skin: theme === "dark" ? "oxide-dark" : "oxide",
-                    content_css: theme === "dark" ? "dark" : "default",
-                  }}
-                />
+                
+                <Textarea {...field} rows={10} />
               </FormControl>
               <FormDescription>
                 Write a caption for your content

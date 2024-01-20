@@ -1,5 +1,5 @@
 "use server";
-import { CreateContentParams } from "@/types";
+import { CreateContentParams, GetContentByIdParams } from "@/types";
 import { connectDB } from "../mongoose";
 import Content from "@/database/content.model";
 import Tag from "@/database/tags.model";
@@ -51,3 +51,28 @@ export async function getAllContents() {
     throw error;
   }
 }
+
+export async function getContentById(params: GetContentByIdParams) {
+  try {
+    connectDB();
+    const { id } = params;
+
+    const content = await Content.findById(id)
+      .populate({ path: "author", model: User })
+      .populate({ path: "tags", model: Tag });
+
+    return content;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// export async function getContentById(params: ){
+//   try {
+//     connectDB();
+//   } catch (error) {
+//     console.log(error)
+//     throw error
+//   }
+// }

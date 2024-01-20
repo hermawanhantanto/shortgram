@@ -32,3 +32,25 @@ export interface UpdateUserParams {
 export interface DeleteUserParams {
   clerkId: string;
 }
+
+export interface URLProps {
+  params: {
+    id: string;
+  };
+  searchParams: {
+    page: string;
+    q: string;
+    filter: string;
+  };
+}
+
+export interface GetContentByIdParams {
+  id: string;
+}
+
+export interface CreateCommentParams {
+  description: string;
+  author: string;
+  path: string;
+  contentId: string;
+}

@@ -34,7 +34,7 @@ interface Props {
 const ParseHTML = ({ data }: Props) => {
   useEffect(() => Prism.highlightAll(), []);
 
-  return <div className="w-full min-w-full ">{parse(data)}</div>;
+  return <div className="markdown w-full max-w-full">{parse(data)}</div>;
 };
 
 export default ParseHTML;
