@@ -58,3 +58,23 @@ export interface CreateCommentParams {
 export interface GetAllCommentsContent {
   contentId: string;
 }
+
+export interface LikeContentParams {
+  contentId: string;
+  userId: string;
+  hasLiked: boolean;
+  path: string;
+}
+export interface LikeCommentParams {
+  commentId: string;
+  userId: string;
+  hasLiked: boolean;
+  path: string;
+}
+
+export interface SaveContentParams {
+  contentId: string;
+  userId: string;
+  hasSaved: boolean;
+  path: string;
+}

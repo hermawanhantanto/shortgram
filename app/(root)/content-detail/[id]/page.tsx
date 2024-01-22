@@ -27,7 +27,7 @@ const Page = async ({ params }: URLProps) => {
   });
 
   return (
-    <section className="flex w-full flex-col sm:mx-auto sm:max-w-[700px]">
+    <section className="mx-auto flex flex-col max-sm:max-w-[275px] sm:max-w-[700px] ">
       <div className="flex justify-between max-sm:flex-col-reverse max-sm:gap-4 sm:items-center">
         <div className="flex items-center gap-2">
           <Avatar className="size-8 max-sm:size-6">
@@ -41,6 +41,8 @@ const Page = async ({ params }: URLProps) => {
             hasLike={content.like.includes(user._id)}
             like={content.like.length}
             hasSaved={user.saved.includes(content._id)}
+            contentId={JSON.stringify(content._id)}
+            userId={JSON.stringify(user._id)}
             type="content"
           />
         </div>
@@ -84,7 +86,7 @@ const Page = async ({ params }: URLProps) => {
         <Filter filter={commentsFilter} />
       </div>
       <div className="my-10">
-        <AllComments comments={comments} />
+        <AllComments comments={comments} userId={user._id} />
       </div>
       <CommentForm
         userId={JSON.stringify(user._id)}

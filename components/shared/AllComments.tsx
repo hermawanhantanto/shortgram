@@ -6,9 +6,10 @@ import { timeAgo } from "@/lib/utils";
 
 interface Props {
   comments: [];
+  userId: string;
 }
 
-const AllComments = async ({ comments }: Props) => {
+const AllComments = async ({ comments, userId }: Props) => {
   return (
     <div className="flex flex-col gap-10">
       {comments?.map((comment: any) => (
@@ -21,7 +22,13 @@ const AllComments = async ({ comments }: Props) => {
               </Avatar>
               <p className="body-semibold">{comment.author.name}</p>
             </div>
-            <Votes hasLike={false} like={0} type="comment" />
+            <Votes
+              hasLike={comment.like.includes(userId)}
+              like={comment.like.length}
+              type="comment"
+              commentId={JSON.stringify(comment._id)}
+              userId={JSON.stringify(userId)}
+            />
           </div>
           <div className="body-regular ml-12 flex flex-col gap-4">
             <ParseHTML data={comment.description} />

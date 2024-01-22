@@ -1,7 +1,7 @@
 "use server";
 import Comment from "@/database/comment.model";
 import Content from "@/database/content.model";
-import { CreateCommentParams, GetAllCommentsContent } from "@/types";
+import { CreateCommentParams, GetAllCommentsContent, LikeCommentParams } from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
 import User from "@/database/user.model";
@@ -47,6 +47,25 @@ export async function getAllCommentsContent(params: GetAllCommentsContent) {
     const comments = content.comment;
 
     return comments;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function likeComment(params: LikeCommentParams) {
+  try {
+    connectDB();
+    const { commentId, userId, hasLiked, path } = params;
+    const comment = await Comment.findById(commentId);
+
+    if (hasLiked) {
+      await comment.updateOne({ $pull: { like: userId } });
+    } else {
+      await comment.updateOne({ $push: { like: userId } });
+    }
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

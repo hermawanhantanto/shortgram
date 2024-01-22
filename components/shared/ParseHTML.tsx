@@ -26,7 +26,6 @@ import "prismjs/components/prism-sql";
 import "prismjs/components/prism-mongodb";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
-
 interface Props {
   data: string;
 }
@@ -34,7 +33,7 @@ interface Props {
 const ParseHTML = ({ data }: Props) => {
   useEffect(() => Prism.highlightAll(), []);
 
-  return <div className="markdown w-full max-w-full">{parse(data)}</div>;
+  return <div className="break-words">{parse(data)}</div>;
 };
 
 export default ParseHTML;
