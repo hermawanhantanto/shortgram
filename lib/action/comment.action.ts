@@ -1,8 +1,10 @@
 "use server";
 import Comment from "@/database/comment.model";
 import Content from "@/database/content.model";
-import { CreateCommentParams } from "@/types";
+import { CreateCommentParams, GetAllCommentsContent } from "@/types";
 import { revalidatePath } from "next/cache";
+import { connectDB } from "../mongoose";
+import User from "@/database/user.model";
 
 export async function createComments(params: CreateCommentParams) {
   try {
@@ -18,6 +20,33 @@ export async function createComments(params: CreateCommentParams) {
     });
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllCommentsContent(params: GetAllCommentsContent) {
+  try {
+    connectDB();
+    const { contentId } = params;
+    const content = await Content.findById(contentId)
+      .populate({
+        path: "comment",
+        model: Comment,
+        populate: {
+          path: "author",
+          model: User,
+        },
+      })
+      .populate({
+        path: "author",
+        model: User,
+      });
+
+    const comments = content.comment;
+
+    return comments;
   } catch (error) {
     console.log(error);
     throw error;

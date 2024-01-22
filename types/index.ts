@@ -54,3 +54,7 @@ export interface CreateCommentParams {
   path: string;
   contentId: string;
 }
+
+export interface GetAllCommentsContent {
+  contentId: string;
+}

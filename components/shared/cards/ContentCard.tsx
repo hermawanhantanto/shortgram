@@ -9,9 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CldImage } from "next-cloudinary";
-import Metric from "../Metric";
-import ParseHTML from "../ParseHTML";
 import Link from "next/link";
+import Metric from "../Metric";
 
 interface Props {
   content: string;
@@ -48,9 +47,11 @@ const ContentCard = ({ content, timeago }: Props) => {
             crop="fill"
             sizes="100vw"
           />
-          <div className="sm:paragraph-regular body-regular truncate">
-            <ParseHTML data={caption} />
-          </div>
+
+          <p className="sm:paragraph-regular body-regular truncate">
+            {caption}
+          </p>
+
           {tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               {tags.map((tag: any, index: number) => (

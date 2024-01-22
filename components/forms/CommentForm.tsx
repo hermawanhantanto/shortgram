@@ -111,7 +111,7 @@ const CommentForm = ({ contentId, userId }: Props) => {
         />
         <Button
           type="submit"
-          className="self-end rounded"
+          className="self-end rounded text-white"
           disabled={isSubmitting}
         >
           {isSubmitting ? <Spinner /> : "Submit"}

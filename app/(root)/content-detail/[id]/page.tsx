@@ -1,4 +1,5 @@
 import CommentForm from "@/components/forms/CommentForm";
+import AllComments from "@/components/shared/AllComments";
 import Filter from "@/components/shared/Filter";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
@@ -7,6 +8,7 @@ import Votes from "@/components/shared/Votes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { commentsFilter } from "@/constant";
+import { getAllCommentsContent } from "@/lib/action/comment.action";
 import { getContentById } from "@/lib/action/content.action";
 import { getUserByClerkId } from "@/lib/action/user.action";
 import { timeAgo } from "@/lib/utils";
@@ -20,6 +22,10 @@ const Page = async ({ params }: URLProps) => {
     user = await getUserByClerkId(userId);
   }
   const content = await getContentById({ id: params.id });
+  const comments = await getAllCommentsContent({
+    contentId: params.id,
+  });
+
   return (
     <section className="flex w-full flex-col sm:mx-auto sm:max-w-[700px]">
       <div className="flex justify-between max-sm:flex-col-reverse max-sm:gap-4 sm:items-center">
@@ -35,6 +41,7 @@ const Page = async ({ params }: URLProps) => {
             hasLike={content.like.includes(user._id)}
             like={content.like.length}
             hasSaved={user.saved.includes(content._id)}
+            type="content"
           />
         </div>
       </div>
@@ -75,6 +82,9 @@ const Page = async ({ params }: URLProps) => {
       <div className="mt-20 flex items-center justify-between">
         <h1 className="h2-bold text-primary">All Comments</h1>
         <Filter filter={commentsFilter} />
+      </div>
+      <div className="my-10">
+        <AllComments comments={comments} />
       </div>
       <CommentForm
         userId={JSON.stringify(user._id)}
