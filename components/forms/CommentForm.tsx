@@ -18,13 +18,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import Spinner from "../shared/Spinner";
+import axios from "axios";
 
 interface Props {
   contentId: string;
   userId: string;
+  caption: string;
 }
 
-const CommentForm = ({ contentId, userId }: Props) => {
+const CommentForm = ({ contentId, userId, caption }: Props) => {
   const editorRef = useRef(null);
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof commentSchema>>({
@@ -35,6 +37,7 @@ const CommentForm = ({ contentId, userId }: Props) => {
   });
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerate, setIsGenerate] = useState(false);
   async function onSubmit(values: z.infer<typeof commentSchema>) {
     try {
       setIsSubmitting(true);
@@ -54,70 +57,95 @@ const CommentForm = ({ contentId, userId }: Props) => {
     }
   }
 
+  const generateAI = async () => {
+    try {
+      setIsGenerate(true);
+      const response = await axios.post("http://localhost:3000/api/chatgpt", {
+        caption,
+      });
+      form.setValue("description", response.data);
+      toast("Success generate AI");
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      setIsGenerate(false);
+    }
+  };
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-10 flex flex-col space-y-8"
+    <section className="flex flex-col gap-2">
+      <Button
+        className="w-fit self-end rounded bg-secondary text-primary hover:text-white"
+        onClick={() => generateAI()}
+        disabled={isGenerate}
       >
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Editor
-                  apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                  onInit={(editor) => {
-                    // @ts-ignore
-                    editorRef.current = editor;
-                  }}
-                  onBlur={field.onBlur}
-                  onEditorChange={(content) => field.onChange(content)}
-                  initialValue={""}
-                  init={{
-                    height: 350,
-                    menubar: false,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "codesample",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                    ],
-                    toolbar:
-                      "undo redo | " +
-                      "codesample | bold italic forecolor | alignleft aligncenter |" +
-                      "alignright alignjustify | bullist numlist",
-                    content_style: "body { font-family:Inter; font-size:16px }",
-                    skin: theme === "dark" ? "oxide-dark" : "oxide",
-                    content_css: theme === "dark" ? "dark" : "default",
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-          className="self-end rounded text-white"
-          disabled={isSubmitting}
+        {isGenerate ? <Spinner /> : "Generate AI"}
+      </Button>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="mt-10 flex flex-col space-y-8"
         >
-          {isSubmitting ? <Spinner /> : "Submit"}
-        </Button>
-      </form>
-    </Form>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Editor
+                    apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                    onInit={(editor) => {
+                      // @ts-ignore
+                      editorRef.current = editor;
+                    }}
+                    onBlur={field.onBlur}
+                    onEditorChange={(content) => field.onChange(content)}
+                    initialValue={field.value}
+                    init={{
+                      height: 350,
+                      menubar: false,
+                      plugins: [
+                        "advlist",
+                        "autolink",
+                        "lists",
+                        "link",
+                        "image",
+                        "charmap",
+                        "preview",
+                        "anchor",
+                        "searchreplace",
+                        "visualblocks",
+                        "codesample",
+                        "fullscreen",
+                        "insertdatetime",
+                        "media",
+                        "table",
+                      ],
+                      toolbar:
+                        "undo redo | " +
+                        "codesample | bold italic forecolor | alignleft aligncenter |" +
+                        "alignright alignjustify | bullist numlist",
+                      content_style:
+                        "body { font-family:Inter; font-size:16px }",
+                      skin: theme === "dark" ? "oxide-dark" : "oxide",
+                      content_css: theme === "dark" ? "dark" : "default",
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="self-end rounded text-white"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <Spinner /> : "Submit"}
+          </Button>
+        </form>
+      </Form>
+    </section>
   );
 };
 

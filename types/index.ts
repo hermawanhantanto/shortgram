@@ -78,3 +78,10 @@ export interface SaveContentParams {
   hasSaved: boolean;
   path: string;
 }
+
+export interface FollowUserParams {
+  currentClerkId: string;
+  targetUserId: string;
+  isFollowing: boolean;
+  path: string;
+}

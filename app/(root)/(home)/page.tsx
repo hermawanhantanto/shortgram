@@ -23,7 +23,7 @@ export default async function Home() {
       </div>
       <div className="mt-10 flex w-full gap-6 max-sm:flex-col sm:items-center sm:justify-between">
         <div className="max-w-[600px] flex-1">
-          <SearchBar placeholder="Search for contents" />
+          <SearchBar placeholder="Search for spesific contents" />
         </div>
 
         <Filter filter={homeFilter} />

@@ -68,3 +68,21 @@ export const commentsFilter: FilterType[] = [
     value: "most-liked",
   },
 ];
+
+export const usersFilter: FilterType[] = [
+  {
+    id: 1,
+    label: "New Users",
+    value: "new-users",
+  },
+  {
+    id: 2,
+    label: "Old Users",
+    value: "old-users",
+  },
+  {
+    id: 3,
+    label: "Top Users",
+    value: "top-users",
+  },
+]

@@ -1,5 +1,10 @@
 "use server";
-import { CreateUserParams, DeleteUserParams, UpdateUserParams } from "@/types";
+import {
+  CreateUserParams,
+  DeleteUserParams,
+  FollowUserParams,
+  UpdateUserParams,
+} from "@/types";
 import { connectDB } from "../mongoose";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -64,6 +69,28 @@ export async function deleteUser(params: DeleteUserParams) {
     const { clerkId } = params;
     const deleteUser = await User.findOneAndDelete({ clerkId });
     return deleteUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function followUser(params: FollowUserParams) {
+  try {
+    connectDB();
+    const { currentClerkId, targetUserId, isFollowing, path } = params;
+    const currentUser = await User.findOne({ clerkId: currentClerkId });
+    const targetUser = await User.findById(targetUserId);
+
+    if (isFollowing) {
+      await targetUser.updateOne({ $pull: { follower: currentUser._id } });
+      await currentUser.updateOne({ $pull: { following: targetUser._id } });
+    } else {
+      await targetUser.updateOne({ $push: { follower: currentUser._id } });
+      await currentUser.updateOne({ $push: { following: targetUser._id } });
+    }
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

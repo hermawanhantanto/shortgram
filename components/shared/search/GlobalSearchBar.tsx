@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
-const SearchBar = () => {
+const GlobalSearchBar = () => {
   return (
     <div className="flex gap-2 rounded-xl bg-secondary px-5 py-1.5 shadow max-sm:hidden">
       <Input
@@ -21,4 +21,4 @@ const SearchBar = () => {
   );
 };
 
-export default SearchBar;
+export default GlobalSearchBar;

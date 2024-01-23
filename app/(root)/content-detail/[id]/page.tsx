@@ -85,13 +85,16 @@ const Page = async ({ params }: URLProps) => {
         <h1 className="h2-bold text-primary">All Comments</h1>
         <Filter filter={commentsFilter} />
       </div>
-      <div className="my-10">
+      <div className="my-10 ">
         <AllComments comments={comments} userId={user._id} />
       </div>
-      <CommentForm
-        userId={JSON.stringify(user._id)}
-        contentId={JSON.stringify(content._id)}
-      />
+      <div className="flex flex-col">
+        <CommentForm
+          userId={JSON.stringify(user._id)}
+          contentId={JSON.stringify(content._id)}
+          caption={content.caption}
+        />
+      </div>
     </section>
   );
 };

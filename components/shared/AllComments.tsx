@@ -9,7 +9,7 @@ interface Props {
   userId: string;
 }
 
-const AllComments = async ({ comments, userId }: Props) => {
+const AllComments = ({ comments, userId }: Props) => {
   return (
     <div className="flex flex-col gap-10">
       {comments?.map((comment: any) => (
