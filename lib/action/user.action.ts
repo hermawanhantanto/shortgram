@@ -3,11 +3,14 @@ import {
   CreateUserParams,
   DeleteUserParams,
   FollowUserParams,
+  GetContentsSavedParams,
   UpdateUserParams,
 } from "@/types";
 import { connectDB } from "../mongoose";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import Content from "@/database/content.model";
+import Tag from "@/database/tags.model";
 
 export async function createUser(params: CreateUserParams) {
   try {
@@ -91,6 +94,26 @@ export async function followUser(params: FollowUserParams) {
     }
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getContentSaved(params: GetContentsSavedParams) {
+  try {
+    connectDB();
+    const { userId } = params;
+    const user = await User.findOne({ clerkId: userId }).populate({
+      path: "saved",
+      model: Content,
+      populate: [
+        { path: "author", model: User, select: "_id clerkId name picture" },
+        { path: "tags", model: Tag, select: "_id name" },
+      ],
+    });
+
+    return user.saved;
   } catch (error) {
     console.log(error);
     throw error;

@@ -85,3 +85,7 @@ export interface FollowUserParams {
   isFollowing: boolean;
   path: string;
 }
+
+export interface GetContentsSavedParams {
+  userId: string;
+}

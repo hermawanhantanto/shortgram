@@ -13,7 +13,7 @@ const Page = async () => {
   const currentUser = await getUserByClerkId(userId!);
 
   return (
-    <>
+    <section>
       <h1 className="h1-bold text-primary max-sm:mt-8">All Users</h1>
       <div className="mt-10 flex w-full gap-6 max-sm:flex-col sm:items-center sm:justify-between">
         <div className="max-w-[600px] flex-1">
@@ -36,7 +36,7 @@ const Page = async () => {
       ) : (
         <NoResult />
       )}
-    </>
+    </section>
   );
 };
 

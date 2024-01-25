@@ -85,4 +85,45 @@ export const usersFilter: FilterType[] = [
     label: "Top Users",
     value: "top-users",
   },
-]
+  {
+    id: 4,
+    label: "Name",
+    value: "name",
+  },
+];
+
+export const savedFilter: FilterType[] = [
+  {
+    id: 1,
+    label: "Most Viewed",
+    value: "most-viewed",
+  },
+  {
+    id: 2,
+    label: "Most Liked",
+    value: "most-liked",
+  },
+  {
+    id: 3,
+    label: "Most Commented",
+    value: "most-commented",
+  },
+];
+
+export const tagsFilter: FilterType[] = [
+  {
+    id: 1,
+    label: "Most Popular",
+    value: "most-popular",
+  },
+  {
+    id: 2,
+    label: "Newest",
+    value: "newest",
+  },
+  {
+    id: 3,
+    label: "Name",
+    value: "name",
+  },
+];

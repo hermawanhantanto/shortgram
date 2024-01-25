@@ -26,7 +26,7 @@ export async function createContent(params: CreateContentParams) {
     for (const tag of tags) {
       const existingTags = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
-        { $setOnInsert: { name: tag }, $push: { content: content._id } },
+        { $setOnInsert: { name: tag }, $push: { contents: content._id } },
         { upsert: true, new: true }
       );
       tagDocuments.push(existingTags._id);
@@ -104,7 +104,7 @@ export async function saveContent(params: SaveContentParams) {
     } else {
       await user.updateOne({ $push: { saved: contentId } });
     }
-    
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
