@@ -89,3 +89,7 @@ export interface FollowUserParams {
 export interface GetContentsSavedParams {
   userId: string;
 }
+
+export interface GetContentsByTagParams {
+  tagId: string;
+}

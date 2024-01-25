@@ -76,7 +76,7 @@ const RightSideBar = () => {
       <div className="flex flex-col gap-5">
         {topTags.map((tag) => (
           <Link
-            className="flex w-fit items-center rounded bg-secondary px-3 py-2.5 capitalize text-slate-500"
+            className="flex w-fit items-center rounded bg-secondary px-3 py-2.5 capitalize text-blue-500"
             key={tag.id}
             href={`/tags/${tag.id}`}
           >
