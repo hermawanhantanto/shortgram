@@ -18,7 +18,7 @@ interface Props {
 }
 
 const ContentCard = ({ content, timeago }: Props) => {
-  const { author, caption, image, tags, like, _id, comment } =
+  const { author, caption, image, tags, like, _id, comment, views } =
     JSON.parse(content);
 
   return (
@@ -66,17 +66,21 @@ const ContentCard = ({ content, timeago }: Props) => {
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex items-center gap-4">
-          <Metric
-            image="/assets/icons/heart.svg"
-            label={like.length || 0}
-            alt="heart-icon"
-          />
-          <Metric
-            image="/assets/icons/comment.svg"
-            label={comment.length || 0}
-            alt="comment-icon"
-          />
+        <CardFooter className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Metric
+              image="/assets/icons/heart.svg"
+              label={like.length || 0}
+              alt="heart-icon"
+            />
+            <Metric
+              image="/assets/icons/comment.svg"
+              label={comment.length || 0}
+              alt="comment-icon"
+            />
+          </div>
+
+          <Metric image="/assets/icons/eye.svg" label={views} alt="eye-icon" />
         </CardFooter>
       </Card>
     </Link>

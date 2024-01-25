@@ -4,6 +4,7 @@ import Filter from "@/components/shared/Filter";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderImage from "@/components/shared/RenderImage";
+import Views from "@/components/shared/Views";
 import Votes from "@/components/shared/Votes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -72,11 +73,19 @@ const Page = async ({ params }: URLProps) => {
         crop="fill"
       />
       <div className="mt-4 flex items-center justify-between">
-        <Metric
-          image="/assets/icons/comment.svg"
-          label={content.comment.length || 0}
-          alt="comment-icon"
-        />
+        <div className="flex items-center gap-4">
+          <Metric
+            image="/assets/icons/comment.svg"
+            label={content.comment.length || 0}
+            alt="comment-icon"
+          />
+          <Views
+            userId={JSON.stringify(user._id)}
+            contentId={JSON.stringify(content._id)}
+            views={content.views}
+          />
+        </div>
+
         <p className="body-medium text-slate-500">
           Created at {timeAgo(content.createdAt)}
         </p>

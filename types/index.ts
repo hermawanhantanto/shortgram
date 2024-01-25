@@ -93,3 +93,7 @@ export interface GetContentsSavedParams {
 export interface GetContentsByTagParams {
   tagId: string;
 }
+export interface CountViewsParams {
+  contentId: string;
+  userId?: string;
+}

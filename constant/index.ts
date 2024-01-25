@@ -26,6 +26,11 @@ export const leftSideBar = [
     icon: "/assets/icons/upload.svg",
     href: "/upload-content",
   },
+  {
+    label: "Profile",
+    icon: "/assets/icons/profile.svg",
+    href: `/profile`,
+  }
 ];
 
 export const homeFilter: FilterType[] = [

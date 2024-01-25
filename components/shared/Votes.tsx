@@ -29,7 +29,6 @@ const Votes = ({
   const [isLike, setIsLike] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-
   const handleLike = async () => {
     try {
       setIsLike(true);
