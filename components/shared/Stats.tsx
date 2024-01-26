@@ -1,6 +1,5 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import Image from "next/image";
+import { Card, CardDescription, CardHeader } from "../ui/card";
 
 interface Props {
   gold: number;
