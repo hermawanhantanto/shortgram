@@ -1,6 +1,5 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,10 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { followUser } from "@/lib/action/user.action";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { toast } from "sonner";
+import FollowBtn from "../FollowBtn";
 
 interface Props {
   user: string;
@@ -24,26 +21,6 @@ const UserCard = ({ user, currentUser, isFollowing }: Props) => {
   const { name, picture, username, follower, following, clerkId, _id } =
     JSON.parse(user);
 
-  const pathname = usePathname();
-  const handleFollow = async () => {
-    try {
-      await followUser({
-        currentClerkId: currentUser,
-        targetUserId: _id,
-        path: pathname,
-        isFollowing,
-      });
-
-      if (isFollowing) {
-        toast("Success Unfollowing");
-      } else {
-        toast("Success Following");
-      }
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
   return (
     <Card className="min-w-full rounded-xl shadow transition ease-in-out hover:translate-y-5 dark:border-none sm:min-w-[250px]">
       <CardHeader className="flex flex-col items-center justify-center">
@@ -68,13 +45,12 @@ const UserCard = ({ user, currentUser, isFollowing }: Props) => {
       </CardContent>
       {currentUser !== clerkId && (
         <CardFooter className="flex-center">
-          <Button
-            className="min-w-full rounded text-white"
-            onClick={handleFollow}
-            variant={`${isFollowing ? "destructive" : "default"}`}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+          <FollowBtn
+            isFollowing={isFollowing}
+            currentUser={currentUser}
+            targetUser={JSON.stringify(_id)}
+            classname="min-w-full"
+          />
         </CardFooter>
       )}
     </Card>

@@ -60,10 +60,14 @@ const CommentForm = ({ contentId, userId, caption }: Props) => {
   const generateAI = async () => {
     try {
       setIsGenerate(true);
+      console.log(editorRef);
       const response = await axios.post("http://localhost:3000/api/chatgpt", {
         caption,
       });
-      form.setValue("description", response.data);
+      if (editorRef.current) {
+        // @ts-ignore
+        editorRef.current.target.selection.setContent(response.data);
+      }
       toast("Success generate AI");
     } catch (error) {
       console.log(error);
@@ -100,7 +104,7 @@ const CommentForm = ({ contentId, userId, caption }: Props) => {
                     }}
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
-                    initialValue={field.value}
+                    initialValue={""}
                     init={{
                       height: 350,
                       menubar: false,
