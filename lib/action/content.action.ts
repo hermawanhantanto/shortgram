@@ -1,15 +1,16 @@
 "use server";
+import Content from "@/database/content.model";
+import Tag from "@/database/tags.model";
+import User from "@/database/user.model";
 import {
   CreateContentParams,
+  GetContentByAuthorParams,
   GetContentByIdParams,
   LikeContentParams,
   SaveContentParams,
 } from "@/types";
-import { connectDB } from "../mongoose";
-import Content from "@/database/content.model";
-import Tag from "@/database/tags.model";
-import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import { connectDB } from "../mongoose";
 
 export async function createContent(params: CreateContentParams) {
   try {
@@ -106,6 +107,26 @@ export async function saveContent(params: SaveContentParams) {
     }
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getContentByAuthor(params: GetContentByAuthorParams) {
+  try {
+    connectDB();
+    const { userId } = params;
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) {
+      throw new Error();
+    }
+    const contents = await Content.find({ author: user._id }).populate([
+      { path: "author", model: User },
+      { path: "tags", model: Tag },
+    ]);
+
+    return contents;
   } catch (error) {
     console.log(error);
     throw error;

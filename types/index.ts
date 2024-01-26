@@ -59,6 +59,10 @@ export interface GetAllCommentsContent {
   contentId: string;
 }
 
+export interface GetContentByAuthorParams {
+  userId: string;
+}
+
 export interface LikeContentParams {
   contentId: string;
   userId: string;
