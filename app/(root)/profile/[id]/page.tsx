@@ -1,7 +1,7 @@
 import Metric from "@/components/shared/Metric";
 import NoResult from "@/components/shared/NoResult";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUserByClerkId } from "@/lib/action/user.action";
+import { getContentSaved, getUserByClerkId } from "@/lib/action/user.action";
 import { URLProps } from "@/types";
 import React from "react";
 import { format } from "date-fns";
@@ -9,11 +9,19 @@ import { auth } from "@clerk/nextjs";
 import FollowBtn from "@/components/shared/FollowBtn";
 import Link from "next/link";
 import Stats from "@/components/shared/Stats";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getContentByAuthor } from "@/lib/action/content.action";
+import ContentCard from "@/components/shared/cards/ContentCard";
+import { timeAgo } from "@/lib/utils";
+import { countComments } from "@/lib/action/comment.action";
 
 const Page = async ({ params }: URLProps) => {
   const { userId } = auth();
   const user = await getUserByClerkId(params.id);
   const currentUser = await getUserByClerkId(userId!);
+  const contents = await getContentByAuthor({ userId: userId! });
+  const savedContents = await getContentSaved({ userId: userId! });
+  const sumComment = await countComments({ userId: currentUser._id! });
 
   if (!user) return <NoResult />;
   return (
@@ -66,7 +74,51 @@ const Page = async ({ params }: URLProps) => {
         All Stats - {user.reputation}
       </h2>
       <div className="mt-10">
-        <Stats gold={10} silver={10} bronze={10} comments={10} contents={10} />
+        <Stats
+          gold={10}
+          silver={10}
+          bronze={10}
+          comments={sumComment}
+          contents={contents.length}
+        />
+      </div>
+      <div className="mt-10">
+        <Tabs defaultValue="account" className="max-w-full">
+          <TabsList>
+            <TabsTrigger value="contents">Contents</TabsTrigger>
+            <TabsTrigger value="saved">Saved</TabsTrigger>
+          </TabsList>
+          <TabsContent value="contents" className="mt-8 grid grid-cols-2 gap-6">
+            {contents.length > 0 ? (
+              contents?.map((content: any) => (
+                <ContentCard
+                  content={JSON.stringify(content)}
+                  timeago={timeAgo(content.createdAt)}
+                  key={content._id}
+                />
+              ))
+            ) : (
+              <div className="body-semibold mt-8 size-full text-gray-500">
+                You have&apos;nt post a content
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="saved" className="grid grid-cols-2 gap-6">
+            {savedContents.length > 0 ? (
+              savedContents?.map((content: any) => (
+                <ContentCard
+                  content={JSON.stringify(content)}
+                  timeago={timeAgo(content.createdAt)}
+                  key={content._id}
+                />
+              ))
+            ) : (
+              <div className="body-semibold size-full text-gray-500">
+                You have&apos;nt save a content
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
   );

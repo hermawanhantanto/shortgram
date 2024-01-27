@@ -1,7 +1,12 @@
 "use server";
 import Comment from "@/database/comment.model";
 import Content from "@/database/content.model";
-import { CreateCommentParams, GetAllCommentsContent, LikeCommentParams } from "@/types";
+import {
+  CountCommentsParams,
+  CreateCommentParams,
+  GetAllCommentsContent,
+  LikeCommentParams,
+} from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
 import User from "@/database/user.model";
@@ -66,6 +71,18 @@ export async function likeComment(params: LikeCommentParams) {
     }
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function countComments(params: CountCommentsParams) {
+  try {
+    connectDB();
+    const { userId } = params;
+    const countComments = await Comment.countDocuments({ author: userId });
+    return countComments;
   } catch (error) {
     console.log(error);
     throw error;

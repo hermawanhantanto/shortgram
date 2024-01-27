@@ -100,7 +100,7 @@ const ContentForm = ({ mongoUser }: Props) => {
               </FormLabel>
               <FormControl>
                 
-                <Textarea {...field} rows={10} />
+                <Textarea {...field} rows={10} className="dark:bg-secondary"/>
               </FormControl>
               <FormDescription>
                 Write a caption for your content

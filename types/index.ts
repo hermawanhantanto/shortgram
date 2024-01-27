@@ -21,10 +21,12 @@ export interface CreateUserParams {
 export interface UpdateUserParams {
   clerkId: string;
   updateData: {
-    name: string;
-    username: string | null;
-    email: string;
-    picture: string;
+    name?: string;
+    username?: string;
+    email?: string;
+    picture?: string;
+    bio?: string;
+    location?: string;
   };
   path: string;
 }
@@ -100,4 +102,8 @@ export interface GetContentsByTagParams {
 export interface CountViewsParams {
   contentId: string;
   userId?: string;
+}
+
+export interface CountCommentsParams {
+  userId: string;
 }

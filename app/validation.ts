@@ -12,3 +12,8 @@ export const contentSchema = z.object({
 export const commentSchema = z.object({
   description: z.string(),
 });
+
+export const editProfileSchema = z.object({
+  bio: z.string(),
+  location: z.string(),
+});
