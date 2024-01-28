@@ -33,7 +33,22 @@ export async function getContentByTag(params: GetContentsByTagParams) {
     const contents = tags.contents;
     const name = tags.name;
     return { contents, name };
-    
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getTopTags() {
+  try {
+    connectDB();
+    const tags = await Tag.aggregate([
+      { $project: { name: 1, sumContents: { $size: "$contents" } } },
+    ])
+      .sort({ sumContents: -1 })
+      .limit(5);
+
+    return tags;
   } catch (error) {
     console.log(error);
     throw error;

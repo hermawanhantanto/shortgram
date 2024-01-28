@@ -18,6 +18,7 @@ interface Props {
 }
 
 const ContentCard = ({ content, timeago }: Props) => {
+  
   const { author, caption, image, tags, like, _id, comment, views } =
     JSON.parse(content);
 

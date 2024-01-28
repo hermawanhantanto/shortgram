@@ -107,3 +107,21 @@ export interface CountViewsParams {
 export interface CountCommentsParams {
   userId: string;
 }
+
+export interface DeleteContentParams {
+  contentId: string;
+}
+
+export interface EditContentParams {
+  path: string;
+  contentId: string;
+  updateData: {
+    caption?: string;
+    tags?: [];
+    image?: string;
+  };
+}
+
+export interface DeleteCommentParams {
+  commentId: string;
+}

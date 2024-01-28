@@ -27,6 +27,8 @@ const Page = async ({ params }: URLProps) => {
     contentId: params.id,
   });
 
+  const isAuthor = String(content.author._id) === String(user._id);
+
   return (
     <section className="mx-auto flex flex-col max-sm:max-w-[275px] sm:max-w-[700px] ">
       <div className="flex justify-between max-sm:flex-col-reverse max-sm:gap-4 sm:items-center">
@@ -44,6 +46,7 @@ const Page = async ({ params }: URLProps) => {
             hasSaved={user.saved.includes(content._id)}
             contentId={JSON.stringify(content._id)}
             userId={JSON.stringify(user._id)}
+            isAuthor={isAuthor}
             type="content"
           />
         </div>

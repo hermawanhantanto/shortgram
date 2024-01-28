@@ -119,3 +119,14 @@ export async function getContentSaved(params: GetContentsSavedParams) {
     throw error;
   }
 }
+
+export async function getTopUsers() {
+  try {
+    connectDB();
+    const users = await User.find().sort({ follower: -1 }).limit(5);
+    return users;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

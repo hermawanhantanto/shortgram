@@ -1,59 +1,12 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { getTopTags } from "@/lib/action/tags.action";
+import { getTopUsers } from "@/lib/action/user.action";
 
-const topUsers = [
-  {
-    id: "1",
-    name: "Render Network",
-    image: "https://github.com/shadcn.png",
-  },
-  {
-    id: "2",
-    name: "Celestia",
-    image: "https://github.com/shadcn.png",
-  },
-  {
-    id: "3",
-    name: "Solana",
-    image: "https://github.com/shadcn.png",
-  },
-  {
-    id: "4",
-    name: "Polygon",
-    image: "https://github.com/shadcn.png",
-  },
-  {
-    id: "5",
-    name: "Cardano",
-    image: "https://github.com/shadcn.png",
-  },
-];
-
-const topTags = [
-  {
-    id: "1",
-    name: "Cryptocurrency",
-  },
-  {
-    id: "2",
-    name: "Blockchain",
-  },
-  {
-    id: "3",
-    name: "Artificial",
-  },
-  {
-    id: "4",
-    name: "Sofware",
-  },
-  {
-    id: "5",
-    name: "Social",
-  },
-];
-
-const RightSideBar = () => {
+const RightSideBar = async () => {
+  const topTags = await getTopTags();
+  const topUsers = await getTopUsers();
   return (
     <div className="sticky right-0 top-0 flex min-h-screen min-w-[250px] flex-col gap-6 border-l border-l-slate-100 px-6 py-10 dark:border-l-zinc-900 max-xl:hidden">
       <h1 className="h3-bold">Top Users</h1>
@@ -65,7 +18,7 @@ const RightSideBar = () => {
             href={`/profile/${user.id}`}
           >
             <Avatar className="size-8">
-              <AvatarImage src={user.image} />
+              <AvatarImage src={user.picture} />
               <AvatarFallback>?</AvatarFallback>
             </Avatar>
             <p className="body-semibold">{user.name}</p>

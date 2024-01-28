@@ -16,6 +16,7 @@ export async function createComments(params: CreateCommentParams) {
     const { author, description, path, contentId } = params;
 
     const comment = await Comment.create({
+      content: contentId,
       description,
       author,
     });

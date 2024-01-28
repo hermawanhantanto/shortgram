@@ -4,6 +4,8 @@ import Tag from "@/database/tags.model";
 import User from "@/database/user.model";
 import {
   CreateContentParams,
+  DeleteCommentParams,
+  DeleteContentParams,
   GetContentByAuthorParams,
   GetContentByIdParams,
   LikeContentParams,
@@ -11,6 +13,8 @@ import {
 } from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
+import Comment from "@/database/comment.model";
+import Interaction from "@/database/Interaction";
 
 export async function createContent(params: CreateContentParams) {
   try {
@@ -127,6 +131,66 @@ export async function getContentByAuthor(params: GetContentByAuthorParams) {
     ]);
 
     return contents;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteContent(params: DeleteContentParams) {
+  try {
+    connectDB();
+    const { contentId } = params;
+    const contents = await Content.findById(contentId).populate({
+      path: "tags",
+      model: Tag,
+    });
+
+    if (!contents) {
+      throw new Error();
+    }
+
+    await Comment.deleteMany({ content: contentId });
+    await User.updateMany({ $pull: { saved: contentId } });
+    await Interaction.deleteMany({ content: contentId });
+
+    for (const tag of contents.tags) {
+      const currentTag = await Tag.findByIdAndUpdate(
+        tag._id,
+        {
+          $pull: { contents: contentId },
+        },
+        { upsert: true, new: true }
+      );
+
+      if (currentTag.contents.length <= 0) {
+        await Tag.findByIdAndDelete(currentTag._id);
+      }
+    }
+
+    await Content.findByIdAndDelete(contentId);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteComment(params: DeleteCommentParams) {
+  try {
+    connectDB();
+    const { commentId } = params;
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      throw new Error();
+    }
+
+    await Content.findByIdAndUpdate(comment.content, {
+      $pull: { comment: comment._id },
+    });
+
+    await Comment.findByIdAndDelete(commentId);
+    
   } catch (error) {
     console.log(error);
     throw error;
