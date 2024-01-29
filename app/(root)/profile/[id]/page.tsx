@@ -19,9 +19,9 @@ const Page = async ({ params }: URLProps) => {
   const { userId } = auth();
   const user = await getUserByClerkId(params.id);
   const currentUser = await getUserByClerkId(userId!);
-  const contents = await getContentByAuthor({ userId: userId! });
-  const savedContents = await getContentSaved({ userId: userId! });
-  const sumComment = await countComments({ userId: currentUser._id! });
+  const contents = await getContentByAuthor({ userId: params.id });
+  const savedContents = await getContentSaved({ userId: params.id });
+  const sumComment = await countComments({ userId: currentUser._id });
 
   if (!user) return <NoResult />;
   return (
@@ -103,7 +103,7 @@ const Page = async ({ params }: URLProps) => {
               </div>
             )}
           </TabsContent>
-          <TabsContent value="saved" className="grid grid-cols-2 gap-6">
+          <TabsContent value="saved" className="mt-8 grid grid-cols-2 gap-6">
             {savedContents.length > 0 ? (
               savedContents?.map((content: any) => (
                 <ContentCard
