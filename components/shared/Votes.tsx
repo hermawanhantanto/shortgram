@@ -110,7 +110,12 @@ const Votes = ({
       throw error;
     }
   };
-  const handleEdit = async () => {};
+
+  const handleEdit = async () => {
+    if (type === "content") {
+      router.push(`/content-detail/${JSON.parse(contentId!)}/edit`);
+    }
+  };
 
   return (
     <div className="flex items-center gap-4">
@@ -177,14 +182,16 @@ const Votes = ({
           height={20}
           className="cursor-pointer object-contain"
         />
-        <Image
-          src="/assets/icons/pencil-2.svg"
-          alt="delete"
-          onClick={handleEdit}
-          width={20}
-          height={20}
-          className="cursor-pointer object-contain"
-        />
+        {type === "content" && (
+          <Image
+            src="/assets/icons/pencil-2.svg"
+            alt="delete"
+            onClick={handleEdit}
+            width={20}
+            height={20}
+            className="cursor-pointer object-contain"
+          />
+        )}
       </div>
     </div>
   );

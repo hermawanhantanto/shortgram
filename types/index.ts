@@ -113,11 +113,10 @@ export interface DeleteContentParams {
 }
 
 export interface EditContentParams {
-  path: string;
   contentId: string;
   updateData: {
     caption?: string;
-    tags?: [];
+    tags?: string[];
     image?: string;
   };
 }

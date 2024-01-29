@@ -1,4 +1,3 @@
-import CommentForm from "@/components/forms/CommentForm";
 import AllComments from "@/components/shared/AllComments";
 import Filter from "@/components/shared/Filter";
 import Metric from "@/components/shared/Metric";
@@ -98,13 +97,11 @@ const Page = async ({ params }: URLProps) => {
         <Filter filter={commentsFilter} />
       </div>
       <div className="my-10 ">
-        <AllComments comments={comments} userId={user._id} />
-      </div>
-      <div className="flex flex-col">
-        <CommentForm
-          userId={JSON.stringify(user._id)}
+        <AllComments
+          comments={comments}
+          userId={user._id}
+          contentCap={content.caption}
           contentId={JSON.stringify(content._id)}
-          caption={content.caption}
         />
       </div>
     </section>

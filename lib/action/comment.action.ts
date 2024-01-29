@@ -1,15 +1,15 @@
 "use server";
 import Comment from "@/database/comment.model";
 import Content from "@/database/content.model";
+import User from "@/database/user.model";
 import {
   CountCommentsParams,
   CreateCommentParams,
   GetAllCommentsContent,
-  LikeCommentParams,
+  LikeCommentParams
 } from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
-import User from "@/database/user.model";
 
 export async function createComments(params: CreateCommentParams) {
   try {

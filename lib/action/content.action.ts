@@ -6,6 +6,7 @@ import {
   CreateContentParams,
   DeleteCommentParams,
   DeleteContentParams,
+  EditContentParams,
   GetContentByAuthorParams,
   GetContentByIdParams,
   LikeContentParams,
@@ -190,7 +191,63 @@ export async function deleteComment(params: DeleteCommentParams) {
     });
 
     await Comment.findByIdAndDelete(commentId);
-    
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editContent(params: EditContentParams) {
+  try {
+    connectDB();
+    const { contentId, updateData } = params;
+
+    const content = await Content.findByIdAndUpdate(contentId, {
+      caption: updateData.caption,
+      image: updateData.image,
+    }).populate({
+      path: "tags",
+      model: Tag,
+    });
+
+    if (!content) {
+      throw new Error();
+    }
+
+    if (updateData.tags) {
+      const tagDocuments = [];
+      for (const tag of content.tags) {
+        const currentTag = await Tag.findByIdAndUpdate(
+          tag._id,
+          {
+            $pull: { contents: contentId },
+          },
+          { upsert: true, new: true }
+        );
+
+        await Content.findByIdAndUpdate(content._id, {
+          $pull: { tags: currentTag._id },
+        });
+
+        if (currentTag.contents.length <= 0) {
+          await Tag.findByIdAndDelete(currentTag._id);
+        }
+      }
+
+      for (const tag of updateData.tags) {
+        const existingTags = await Tag.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${tag}$`, "i") } },
+
+          { $setOnInsert: { name: tag }, $push: { contents: content._id } },
+          { upsert: true, new: true }
+        );
+        tagDocuments.push(existingTags);
+      }
+
+      await Content.findByIdAndUpdate(content._id, {
+        $push: { tags: { $each: tagDocuments } },
+      });
+    }
   } catch (error) {
     console.log(error);
     throw error;

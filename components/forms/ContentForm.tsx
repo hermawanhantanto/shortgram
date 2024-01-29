@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createContent } from "@/lib/action/content.action";
+import { createContent, editContent } from "@/lib/action/content.action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
@@ -28,15 +28,18 @@ interface CloudinaryResult {
 
 interface Props {
   mongoUser: string;
+  caption?: string;
+  image?: string;
+  tags?: string[];
+  contentId?: string;
 }
 
-const ContentForm = ({ mongoUser }: Props) => {
-  
+const ContentForm = ({ mongoUser, caption, image, tags, contentId }: Props) => {
   const form = useForm<z.infer<typeof contentSchema>>({
     defaultValues: {
-      caption: "",
-      image: "",
-      tags: [],
+      caption: caption || "",
+      image: image || "",
+      tags: tags || [],
     },
     resolver: zodResolver(contentSchema),
   });
@@ -48,18 +51,31 @@ const ContentForm = ({ mongoUser }: Props) => {
       setIsSubmitting(true);
       const { caption, tags, image } = values;
 
-      const user = await createContent({
-        caption,
-        author: JSON.parse(mongoUser),
-        tags,
-        image,
-      });
+      if (contentId) {
+        const updateData = {
+          caption,
+          image,
+          tags,
+        };
 
-      if (!user) {
-        toast("Something went wrong, please try again!");
+        await editContent({
+          contentId: JSON.parse(contentId),
+          updateData,
+        });
+
+        toast("Succes edit your content");
+      } else {
+        const content = await createContent({
+          caption,
+          author: JSON.parse(mongoUser),
+          tags,
+          image,
+        });
+        if (!content) {
+          toast("Something went wrong, please try again!");
+        }
+        toast("Succes upload your content");
       }
-
-      toast("Succes upload your content");
       router.push("/");
     } catch (error) {
       console.log(error);
@@ -99,8 +115,7 @@ const ContentForm = ({ mongoUser }: Props) => {
                 Caption<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                
-                <Textarea {...field} rows={10} className="dark:bg-secondary"/>
+                <Textarea {...field} rows={10} className="dark:bg-secondary" />
               </FormControl>
               <FormDescription>
                 Write a caption for your content
@@ -165,6 +180,7 @@ const ContentForm = ({ mongoUser }: Props) => {
                   <Input
                     placeholder="Enter an tags"
                     onChange={(e) => handleTags(e.target.value)}
+                    defaultValue={field.value.join(",")}
                     className="min-h-[46px] rounded border-none bg-secondary px-5 py-1.5"
                   />
                   <div className="my-2 flex items-center gap-2">
