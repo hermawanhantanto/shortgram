@@ -60,7 +60,6 @@ const CommentForm = ({ contentId, userId, caption }: Props) => {
   const generateAI = async () => {
     try {
       setIsGenerate(true);
-      console.log(editorRef);
       const response = await axios.post("http://localhost:3000/api/chatgpt", {
         caption,
       });

@@ -29,11 +29,11 @@ const AllComments = ({ comments, userId, contentCap, contentId }: Props) => {
                   <p className="body-semibold">{comment.author.name}</p>
                 </div>
                 <Votes
-                  hasLike={comment.like.includes(userId)}
+                  hasLike={comment.like.includes(JSON.parse(userId))}
                   like={comment.like.length}
                   type="comment"
                   commentId={JSON.stringify(comment._id)}
-                  userId={JSON.stringify(userId)}
+                  userId={userId}
                   isAuthor={isAuthor}
                 />
               </div>

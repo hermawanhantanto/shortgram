@@ -7,6 +7,7 @@ import {
   DeleteCommentParams,
   DeleteContentParams,
   EditContentParams,
+  GetAllContentsParams,
   GetContentByAuthorParams,
   GetContentByIdParams,
   LikeContentParams,
@@ -16,6 +17,7 @@ import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
 import Comment from "@/database/comment.model";
 import Interaction from "@/database/Interaction";
+import { FilterQuery } from "mongoose";
 
 export async function createContent(params: CreateContentParams) {
   try {
@@ -49,13 +51,42 @@ export async function createContent(params: CreateContentParams) {
   }
 }
 
-export async function getAllContents() {
+export async function getAllContents(params: GetAllContentsParams) {
   try {
     connectDB();
+    const { q, orderBy, page = 1, pageSize = 10 } = params;
+
+    let filter: FilterQuery<typeof Content> = {};
+
+    switch (orderBy) {
+      case "newest":
+        filter = {
+          createdAt: -1,
+        };
+        break;
+      case "most-viewed":
+        filter = {
+          views: -1,
+        };
+        break;
+      case "most-liked":
+        filter = {
+          like: -1,
+        };
+        break;
+      case "most-commented":
+        filter = {
+          comment: -1,
+        };
+        break;
+      default:
+        break;
+    }
+
     const contents = await Content.find()
       .populate({ path: "author", model: User })
       .populate({ path: "tags", model: Tag })
-      .sort({ createdAt: -1 });
+      .sort(filter);
 
     return contents;
   } catch (error) {

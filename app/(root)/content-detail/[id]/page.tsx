@@ -99,7 +99,7 @@ const Page = async ({ params }: URLProps) => {
       <div className="my-10 ">
         <AllComments
           comments={comments}
-          userId={user._id}
+          userId={JSON.stringify(user._id)}
           contentCap={content.caption}
           contentId={JSON.stringify(content._id)}
         />

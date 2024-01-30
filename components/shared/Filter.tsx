@@ -26,14 +26,14 @@ const Filter = ({ filter }: Props) => {
     if (orderBy) {
       const newUrl = formUrlQueryParams({
         params: searchParams.toString(),
-        key: "filter",
+        key: "orderBy",
         value: orderBy,
       });
       router.push(newUrl, { scroll: false });
     } else {
       const newUrl = removeUrlQueryParams({
         params: searchParams.toString(),
-        keys: ["filter"],
+        keys: ["orderBy"],
       });
       router.push(newUrl, { scroll: false });
     }

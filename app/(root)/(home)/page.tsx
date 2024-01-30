@@ -5,10 +5,13 @@ import SearchBar from "@/components/shared/search/SearchBar";
 import { homeFilter } from "@/constant";
 import { getAllContents } from "@/lib/action/content.action";
 import { timeAgo } from "@/lib/utils";
+import { URLProps } from "@/types";
 import Link from "next/link";
 
-export default async function Home() {
-  const contents = await getAllContents();
+export default async function Home({ searchParams }: URLProps) {
+  const contents = await getAllContents({
+    orderBy: searchParams.orderBy,
+  });
   return (
     <section className="flex w-full flex-col">
       <div className="flex justify-between max-sm:flex-col-reverse sm:items-center">

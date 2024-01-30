@@ -40,9 +40,7 @@ export interface URLProps {
     id: string;
   };
   searchParams: {
-    page: string;
-    q: string;
-    filter: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -127,6 +125,7 @@ export interface DeleteCommentParams {
 
 export interface GetAllContentsParams {
   page?: number;
-  search?: string;
-  filter?: string;
+  q?: string;
+  orderBy?: string;
+  pageSize?: number;
 }
