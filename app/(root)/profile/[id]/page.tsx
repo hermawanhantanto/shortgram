@@ -83,7 +83,7 @@ const Page = async ({ params }: URLProps) => {
         />
       </div>
       <div className="mt-10">
-        <Tabs defaultValue="account" className="max-w-full">
+        <Tabs defaultValue="contents" className="max-w-full">
           <TabsList>
             <TabsTrigger value="contents">Contents</TabsTrigger>
             <TabsTrigger value="saved">Saved</TabsTrigger>

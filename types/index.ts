@@ -124,3 +124,9 @@ export interface EditContentParams {
 export interface DeleteCommentParams {
   commentId: string;
 }
+
+export interface GetAllContentsParams {
+  page?: number;
+  search?: string;
+  filter?: string;
+}
