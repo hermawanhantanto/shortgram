@@ -1,5 +1,6 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Paginate from "@/components/shared/Paginate";
 import ContentCard from "@/components/shared/cards/ContentCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { homeFilter } from "@/constant";
@@ -9,9 +10,12 @@ import { URLProps } from "@/types";
 import Link from "next/link";
 
 export default async function Home({ searchParams }: URLProps) {
-  const contents = await getAllContents({
+  const { contents, sumContents } = await getAllContents({
     orderBy: searchParams.orderBy,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 1,
   });
+
   return (
     <section className="flex w-full flex-col">
       <div className="flex justify-between max-sm:flex-col-reverse sm:items-center">
@@ -44,6 +48,13 @@ export default async function Home({ searchParams }: URLProps) {
       ) : (
         <NoResult />
       )}
+      <div className="flex-center mt-20">
+        <Paginate
+          currentPage={searchParams.page ? parseInt(searchParams.page) : 1}
+          pageSize={1}
+          total={sumContents}
+        />
+      </div>
     </section>
   );
 }

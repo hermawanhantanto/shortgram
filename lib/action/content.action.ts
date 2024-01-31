@@ -57,7 +57,7 @@ export async function getAllContents(params: GetAllContentsParams) {
     const { q, orderBy, page = 1, pageSize = 10 } = params;
 
     let filter: FilterQuery<typeof Content> = {};
-
+    const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "newest":
         filter = {
@@ -86,9 +86,13 @@ export async function getAllContents(params: GetAllContentsParams) {
     const contents = await Content.find()
       .populate({ path: "author", model: User })
       .populate({ path: "tags", model: Tag })
-      .sort(filter);
+      .sort(filter)
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return contents;
+    const sumContents = await Content.countDocuments();
+
+    return { contents, sumContents };
   } catch (error) {
     console.log(error);
     throw error;
