@@ -3,6 +3,7 @@ import {
   CreateUserParams,
   DeleteUserParams,
   FollowUserParams,
+  GetAllUsersParams,
   GetContentsSavedParams,
   UpdateUserParams,
 } from "@/types";
@@ -11,6 +12,7 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Content from "@/database/content.model";
 import Tag from "@/database/tags.model";
+import { FilterQuery } from "mongoose";
 
 export async function createUser(params: CreateUserParams) {
   try {
@@ -30,10 +32,33 @@ export async function createUser(params: CreateUserParams) {
   }
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectDB();
-    const users = await User.find();
+
+    const { page = 1, pageSize = 10, q, orderBy } = params;
+
+    let filter: FilterQuery<typeof User> = {};
+
+    switch (orderBy) {
+      case "new-users":
+        filter = { joinedAt: -1 };
+        break;
+      case "old-users":
+        filter = { joinedAt: 1 };
+        break;
+      case "top-users":
+        filter = { follower: -1 };
+        break;
+      case "name":
+        filter = { name: -1 };
+        break;
+      default:
+        break;
+    }
+
+    const users = await User.find().sort(filter);
+
     return users;
   } catch (error) {
     console.log(error);
@@ -103,7 +128,23 @@ export async function followUser(params: FollowUserParams) {
 export async function getContentSaved(params: GetContentsSavedParams) {
   try {
     connectDB();
-    const { userId } = params;
+    const { page = 1, pageSize = 10, q, orderBy, userId } = params;
+    let filter: FilterQuery<typeof Content> = {};
+
+    switch (orderBy) {
+      case "most-viewed":
+        filter = { views: -1 };
+        break;
+      case "most-liked":
+        filter = { like: -1 };
+        break;
+      case "most-commented":
+        filter = { comment: -1 };
+        break;
+      default:
+        break;
+    }
+
     const user = await User.findOne({ clerkId: userId }).populate({
       path: "saved",
       model: Content,
@@ -111,6 +152,9 @@ export async function getContentSaved(params: GetContentsSavedParams) {
         { path: "author", model: User, select: "_id clerkId name picture" },
         { path: "tags", model: Tag, select: "_id name" },
       ],
+      options: {
+        sort: filter,
+      },
     });
 
     return user.saved;

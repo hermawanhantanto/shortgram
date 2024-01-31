@@ -8,9 +8,10 @@ import { timeAgo } from "@/lib/utils";
 import { URLProps } from "@/types";
 import React from "react";
 
-const Page = async ({ params }: URLProps) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { contents, name } = await getContentByTag({
     tagId: params.id,
+    orderBy: searchParams.orderBy,
   });
   return (
     <section className="flex w-full flex-col">
@@ -23,7 +24,7 @@ const Page = async ({ params }: URLProps) => {
         <div className="max-w-[600px] flex-1">
           <SearchBar placeholder="Search for spesific contents" />
         </div>
-        
+
         <Filter filter={savedFilter} />
       </div>
       {contents?.length > 0 ? (

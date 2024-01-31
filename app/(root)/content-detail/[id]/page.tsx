@@ -15,7 +15,7 @@ import { timeAgo } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 
-const Page = async ({ params }: URLProps) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { userId } = auth();
   let user;
   if (userId) {
@@ -24,6 +24,7 @@ const Page = async ({ params }: URLProps) => {
   const content = await getContentById({ id: params.id });
   const comments = await getAllCommentsContent({
     contentId: params.id,
+    orderBy: searchParams.orderBy,
   });
 
   const isAuthor = String(content.author._id) === String(user._id);

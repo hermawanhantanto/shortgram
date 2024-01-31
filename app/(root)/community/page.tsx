@@ -4,11 +4,14 @@ import UserCard from "@/components/shared/cards/UserCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { usersFilter } from "@/constant";
 import { getAllUsers, getUserByClerkId } from "@/lib/action/user.action";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import React from "react";
 
-const Page = async () => {
-  const users = await getAllUsers();
+const Page = async ({ searchParams }: URLProps) => {
+  const users = await getAllUsers({
+    orderBy: searchParams.orderBy,
+  });
   const { userId } = auth();
   const currentUser = await getUserByClerkId(userId!);
 

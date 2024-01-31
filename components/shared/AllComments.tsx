@@ -17,7 +17,8 @@ const AllComments = ({ comments, userId, contentCap, contentId }: Props) => {
     <>
       <div className="flex flex-col gap-10">
         {comments?.map((comment: any) => {
-          const isAuthor = String(comment.author._id) === String(userId);
+          const isAuthor =
+            String(comment.author._id) === String(JSON.parse(userId));
           return (
             <div key={comment._id} className="flex flex-col gap-2">
               <div className="flex items-center justify-between">

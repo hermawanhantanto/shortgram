@@ -6,10 +6,11 @@ import {
   CountCommentsParams,
   CreateCommentParams,
   GetAllCommentsContent,
-  LikeCommentParams
+  LikeCommentParams,
 } from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose";
+import { FilterQuery } from "mongoose";
 
 export async function createComments(params: CreateCommentParams) {
   try {
@@ -35,7 +36,18 @@ export async function createComments(params: CreateCommentParams) {
 export async function getAllCommentsContent(params: GetAllCommentsContent) {
   try {
     connectDB();
-    const { contentId } = params;
+    const { contentId, page = 1, pageSize = 10, orderBy } = params;
+    let filter: FilterQuery<typeof Comment> = {};
+    switch (orderBy) {
+      case "newest":
+        filter = { createdAt: -1 };
+        break;
+      case "most-liked":
+        filter = { like: -1 };
+        break;
+      default:
+        break;
+    }
     const content = await Content.findById(contentId)
       .populate({
         path: "comment",
@@ -43,6 +55,9 @@ export async function getAllCommentsContent(params: GetAllCommentsContent) {
         populate: {
           path: "author",
           model: User,
+        },
+        options: {
+          sort: filter,
         },
       })
       .populate({

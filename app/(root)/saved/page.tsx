@@ -5,14 +5,16 @@ import SearchBar from "@/components/shared/search/SearchBar";
 import { savedFilter } from "@/constant";
 import { getContentSaved } from "@/lib/action/user.action";
 import { timeAgo } from "@/lib/utils";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import React from "react";
 
-const Page = async () => {
+const Page = async ({ searchParams }: URLProps) => {
   const { userId } = auth();
 
   const contents = await getContentSaved({
     userId: userId!,
+    orderBy: searchParams.orderBy,
   });
 
   return (
@@ -29,7 +31,7 @@ const Page = async () => {
       </div>
       {contents?.length > 0 ? (
         <div className="mt-10 grid grid-cols-2 gap-6 max-sm:grid-cols-1">
-          {contents?.map((content: any, index:number) => (
+          {contents?.map((content: any, index: number) => (
             <ContentCard
               key={index}
               content={JSON.stringify(content)}

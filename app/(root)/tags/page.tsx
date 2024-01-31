@@ -4,10 +4,13 @@ import TagCard from "@/components/shared/cards/TagCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { tagsFilter } from "@/constant";
 import { getAllTags } from "@/lib/action/tags.action";
+import { URLProps } from "@/types";
 import React from "react";
 
-const Page = async () => {
-  const tags = await getAllTags();
+const Page = async ({ searchParams }: URLProps) => {
+  const tags = await getAllTags({
+    orderBy: searchParams.orderBy,
+  });
 
   return (
     <section className="flex w-full flex-col">

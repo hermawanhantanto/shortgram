@@ -57,6 +57,9 @@ export interface CreateCommentParams {
 
 export interface GetAllCommentsContent {
   contentId: string;
+  page?: number;
+  orderBy?: string;
+  pageSize?: number;
 }
 
 export interface GetContentByAuthorParams {
@@ -92,10 +95,18 @@ export interface FollowUserParams {
 
 export interface GetContentsSavedParams {
   userId: string;
+  page?: number;
+  q?: string;
+  orderBy?: string;
+  pageSize?: number;
 }
 
 export interface GetContentsByTagParams {
   tagId: string;
+  page?: number;
+  q?: string;
+  orderBy?: string;
+  pageSize?: number;
 }
 export interface CountViewsParams {
   contentId: string;
@@ -124,6 +135,19 @@ export interface DeleteCommentParams {
 }
 
 export interface GetAllContentsParams {
+  page?: number;
+  q?: string;
+  orderBy?: string;
+  pageSize?: number;
+}
+export interface GetAllUsersParams {
+  page?: number;
+  q?: string;
+  orderBy?: string;
+  pageSize?: number;
+}
+
+export interface GetAllTagsParams {
   page?: number;
   q?: string;
   orderBy?: string;
