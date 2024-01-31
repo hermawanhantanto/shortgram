@@ -39,7 +39,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
     const { page = 1, pageSize = 10, q, orderBy } = params;
 
     let filter: FilterQuery<typeof User> = {};
-
+    const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "new-users":
         filter = { joinedAt: -1 };
@@ -57,9 +57,13 @@ export async function getAllUsers(params: GetAllUsersParams) {
         break;
     }
 
-    const users = await User.find().sort(filter);
+    const users = await User.find()
+      .sort(filter)
+      .skip(skipAmount)
+      .limit(pageSize);
+    const sumUsers = await User.countDocuments();
 
-    return users;
+    return { users, sumUsers };
   } catch (error) {
     console.log(error);
     throw error;
@@ -130,7 +134,7 @@ export async function getContentSaved(params: GetContentsSavedParams) {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy, userId } = params;
     let filter: FilterQuery<typeof Content> = {};
-
+    const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "most-viewed":
         filter = { views: -1 };
@@ -154,10 +158,14 @@ export async function getContentSaved(params: GetContentsSavedParams) {
       ],
       options: {
         sort: filter,
+        skip: skipAmount,
+        limit: pageSize,
       },
     });
 
-    return user.saved;
+    const data = await User.findOne({ clerkId: userId });
+
+    return { contents: user.saved, sumContents: data.saved.length };
   } catch (error) {
     console.log(error);
     throw error;

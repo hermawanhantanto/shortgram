@@ -11,7 +11,7 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy } = params;
-
+    const skipAmount = (page - 1) * pageSize;
     let filter: FilterQuery<typeof Tag> = {};
 
     switch (orderBy) {
@@ -38,9 +38,14 @@ export async function getAllTags(params: GetAllTagsParams) {
           createdAt: 1,
         },
       },
-    ]).sort(filter);
+    ])
+      .sort(filter)
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return tags;
+    const sumTags = await Tag.countDocuments();
+
+    return { tags, sumTags };
   } catch (error) {
     console.log(error);
     throw error;
@@ -52,7 +57,7 @@ export async function getContentByTag(params: GetContentsByTagParams) {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy, tagId } = params;
     let filter: FilterQuery<typeof Content> = {};
-
+    const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "most-viewed":
         filter = { views: -1 };
@@ -66,7 +71,7 @@ export async function getContentByTag(params: GetContentsByTagParams) {
       default:
         break;
     }
-    
+
     const tags = await Tag.findById(tagId).populate({
       path: "contents",
       model: Content,
@@ -76,12 +81,16 @@ export async function getContentByTag(params: GetContentsByTagParams) {
       ],
       options: {
         sort: filter,
+        skip: skipAmount,
+        limit: pageSize,
       },
     });
 
+    const data = await Tag.findById(tagId);
     const contents = tags.contents;
     const name = tags.name;
-    return { contents, name };
+
+    return { contents, name, sumContents: data.contents.length };
   } catch (error) {
     console.log(error);
     throw error;

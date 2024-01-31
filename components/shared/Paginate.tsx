@@ -19,6 +19,10 @@ const Paginate = ({ currentPage, pageSize, total }: Props) => {
   const router = useRouter();
   const totalPage = Math.ceil(total / pageSize);
   const searchParams = useSearchParams();
+  
+  if (totalPage === 1) {
+    return;
+  }
 
   const handlePage = (page: number) => {
     const newUrl = formUrlQueryParams({

@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: URLProps) {
   const { contents, sumContents } = await getAllContents({
     orderBy: searchParams.orderBy,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
-    pageSize: 1,
+    pageSize: 10,
   });
 
   return (
@@ -51,7 +51,7 @@ export default async function Home({ searchParams }: URLProps) {
       <div className="flex-center mt-20">
         <Paginate
           currentPage={searchParams.page ? parseInt(searchParams.page) : 1}
-          pageSize={1}
+          pageSize={10}
           total={sumContents}
         />
       </div>

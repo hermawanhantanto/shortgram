@@ -1,5 +1,6 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Paginate from "@/components/shared/Paginate";
 import TagCard from "@/components/shared/cards/TagCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { tagsFilter } from "@/constant";
@@ -8,8 +9,10 @@ import { URLProps } from "@/types";
 import React from "react";
 
 const Page = async ({ searchParams }: URLProps) => {
-  const tags = await getAllTags({
+  const {tags, sumTags} = await getAllTags({
     orderBy: searchParams.orderBy,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 10,
   });
 
   return (
@@ -35,6 +38,13 @@ const Page = async ({ searchParams }: URLProps) => {
       ) : (
         <NoResult />
       )}
+      <div className="flex-center mt-20">
+        <Paginate
+          currentPage={searchParams.page ? parseInt(searchParams.page) : 1}
+          pageSize={10}
+          total={sumTags}
+        />
+      </div>
     </section>
   );
 };

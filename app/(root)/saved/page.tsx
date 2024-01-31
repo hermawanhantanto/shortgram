@@ -1,5 +1,6 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Paginate from "@/components/shared/Paginate";
 import ContentCard from "@/components/shared/cards/ContentCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { savedFilter } from "@/constant";
@@ -12,9 +13,11 @@ import React from "react";
 const Page = async ({ searchParams }: URLProps) => {
   const { userId } = auth();
 
-  const contents = await getContentSaved({
+  const { contents, sumContents } = await getContentSaved({
     userId: userId!,
     orderBy: searchParams.orderBy,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 10,
   });
 
   return (
@@ -42,6 +45,13 @@ const Page = async ({ searchParams }: URLProps) => {
       ) : (
         <NoResult />
       )}
+      <div className="flex-center mt-20">
+        <Paginate
+          currentPage={searchParams.page ? parseInt(searchParams.page) : 1}
+          pageSize={10}
+          total={sumContents}
+        />
+      </div>
     </section>
   );
 };

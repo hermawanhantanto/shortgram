@@ -1,5 +1,6 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Paginate from "@/components/shared/Paginate";
 import UserCard from "@/components/shared/cards/UserCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { usersFilter } from "@/constant";
@@ -9,8 +10,10 @@ import { auth } from "@clerk/nextjs";
 import React from "react";
 
 const Page = async ({ searchParams }: URLProps) => {
-  const users = await getAllUsers({
+  const { users, sumUsers } = await getAllUsers({
     orderBy: searchParams.orderBy,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 10,
   });
   const { userId } = auth();
   const currentUser = await getUserByClerkId(userId!);
@@ -39,6 +42,13 @@ const Page = async ({ searchParams }: URLProps) => {
       ) : (
         <NoResult />
       )}
+      <div className="flex-center mt-20">
+        <Paginate
+          currentPage={searchParams.page ? parseInt(searchParams.page) : 1}
+          pageSize={10}
+          total={sumUsers}
+        />
+      </div>
     </section>
   );
 };
