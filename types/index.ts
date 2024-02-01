@@ -64,6 +64,8 @@ export interface GetAllCommentsContent {
 
 export interface GetContentByAuthorParams {
   userId: string;
+  page?: number;
+  pageSize?: number;
 }
 
 export interface LikeContentParams {

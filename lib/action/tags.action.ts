@@ -12,7 +12,12 @@ export async function getAllTags(params: GetAllTagsParams) {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy } = params;
     const skipAmount = (page - 1) * pageSize;
-    let filter: FilterQuery<typeof Tag> = {};
+    let filter = {};
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (q) {
+      query.$or = [{ name: { $regex: new RegExp(q, "i") } }];
+    }
 
     switch (orderBy) {
       case "most-popular":
@@ -29,6 +34,9 @@ export async function getAllTags(params: GetAllTagsParams) {
     }
 
     const tags = await Tag.aggregate([
+      {
+        $match: query,
+      },
       {
         $project: {
           name: 1,
@@ -56,7 +64,13 @@ export async function getContentByTag(params: GetContentsByTagParams) {
   try {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy, tagId } = params;
-    let filter: FilterQuery<typeof Content> = {};
+    let filter = {};
+    const query: FilterQuery<typeof Content> = {};
+
+    if (q) {
+      query.$or = [{ caption: { $regex: new RegExp(q, "i") } }];
+    }
+
     const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "most-viewed":
@@ -84,6 +98,7 @@ export async function getContentByTag(params: GetContentsByTagParams) {
         skip: skipAmount,
         limit: pageSize,
       },
+      match: query,
     });
 
     const data = await Tag.findById(tagId);

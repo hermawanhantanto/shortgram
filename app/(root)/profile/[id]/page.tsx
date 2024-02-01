@@ -14,15 +14,25 @@ import { getContentByAuthor } from "@/lib/action/content.action";
 import ContentCard from "@/components/shared/cards/ContentCard";
 import { timeAgo } from "@/lib/utils";
 import { countComments } from "@/lib/action/comment.action";
+import Paginate from "@/components/shared/Paginate";
 
-const Page = async ({ params }: URLProps) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { userId } = auth();
   const user = await getUserByClerkId(params.id);
   const currentUser = await getUserByClerkId(userId!);
-  const contents = await getContentByAuthor({ userId: params.id });
-  const savedContents = await getContentSaved({ userId: params.id });
-  const sumComment = await countComments({ userId: currentUser._id });
+  const { contents, sumContents } = await getContentByAuthor({
+    userId: params.id,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 10,
+  });
 
+  const result = await getContentSaved({
+    userId: params.id,
+    page: searchParams.page ? parseInt(searchParams.page) : 1,
+    pageSize: 10,
+  });
+  const sumComment = await countComments({ userId: currentUser._id });
+  console.log(result);
   if (!user) return <NoResult />;
   return (
     <section className="flex w-full flex-col">
@@ -102,10 +112,19 @@ const Page = async ({ params }: URLProps) => {
                 You have&apos;nt post a content
               </div>
             )}
+            <div className="flex-center mt-20">
+              <Paginate
+                pageSize={10}
+                currentPage={
+                  searchParams.page ? parseInt(searchParams.page) : 1
+                }
+                total={sumContents}
+              />
+            </div>
           </TabsContent>
           <TabsContent value="saved" className="mt-8 grid grid-cols-2 gap-6">
-            {savedContents.length > 0 ? (
-              savedContents?.map((content: any) => (
+            {result.contents.length > 0 ? (
+              result.contents?.map((content: any) => (
                 <ContentCard
                   content={JSON.stringify(content)}
                   timeago={timeAgo(content.createdAt)}
@@ -117,6 +136,15 @@ const Page = async ({ params }: URLProps) => {
                 You have&apos;nt save a content
               </div>
             )}
+            <div className="flex-center mt-20">
+              <Paginate
+                pageSize={10}
+                currentPage={
+                  searchParams.page ? parseInt(searchParams.page) : 1
+                }
+                total={result.sumContents}
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

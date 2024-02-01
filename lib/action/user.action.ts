@@ -13,6 +13,7 @@ import { revalidatePath } from "next/cache";
 import Content from "@/database/content.model";
 import Tag from "@/database/tags.model";
 import { FilterQuery } from "mongoose";
+import { match } from "assert";
 
 export async function createUser(params: CreateUserParams) {
   try {
@@ -38,8 +39,19 @@ export async function getAllUsers(params: GetAllUsersParams) {
 
     const { page = 1, pageSize = 10, q, orderBy } = params;
 
-    let filter: FilterQuery<typeof User> = {};
+    let filter = {};
+
+    const query: FilterQuery<typeof User> = {};
+
     const skipAmount = (page - 1) * pageSize;
+
+    if (q) {
+      query.$or = [
+        { name: { $regex: new RegExp(q, "i") } },
+        { username: { $regex: new RegExp(q, "i") } },
+      ];
+    }
+
     switch (orderBy) {
       case "new-users":
         filter = { joinedAt: -1 };
@@ -57,7 +69,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
         break;
     }
 
-    const users = await User.find()
+    const users = await User.find(query)
       .sort(filter)
       .skip(skipAmount)
       .limit(pageSize);
@@ -133,8 +145,16 @@ export async function getContentSaved(params: GetContentsSavedParams) {
   try {
     connectDB();
     const { page = 1, pageSize = 10, q, orderBy, userId } = params;
-    let filter: FilterQuery<typeof Content> = {};
+    let filter = {};
+
+    const query: FilterQuery<typeof Content> = {};
+
     const skipAmount = (page - 1) * pageSize;
+
+    if (q) {
+      query.$or = [{ caption: { $regex: new RegExp(q, "i") } }];
+    }
+
     switch (orderBy) {
       case "most-viewed":
         filter = { views: -1 };
@@ -161,6 +181,7 @@ export async function getContentSaved(params: GetContentsSavedParams) {
         skip: skipAmount,
         limit: pageSize,
       },
+      match: query,
     });
 
     const data = await User.findOne({ clerkId: userId });

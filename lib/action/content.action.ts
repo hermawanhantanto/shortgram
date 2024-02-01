@@ -56,7 +56,13 @@ export async function getAllContents(params: GetAllContentsParams) {
     connectDB();
     const { q, orderBy, page = 1, pageSize = 10 } = params;
 
-    let filter: FilterQuery<typeof Content> = {};
+    const query: FilterQuery<typeof Content> = {};
+    let filter = {};
+
+    if (q) {
+      query.$or = [{ caption: { $regex: new RegExp(q, "i") } }];
+    }
+
     const skipAmount = (page - 1) * pageSize;
     switch (orderBy) {
       case "newest":
@@ -83,7 +89,7 @@ export async function getAllContents(params: GetAllContentsParams) {
         break;
     }
 
-    const contents = await Content.find()
+    const contents = await Content.find(query)
       .populate({ path: "author", model: User })
       .populate({ path: "tags", model: Tag })
       .sort(filter)
@@ -156,17 +162,22 @@ export async function saveContent(params: SaveContentParams) {
 export async function getContentByAuthor(params: GetContentByAuthorParams) {
   try {
     connectDB();
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 10 } = params;
     const user = await User.findOne({ clerkId: userId });
+    const skipAmount = (page - 1) * pageSize;
     if (!user) {
       throw new Error();
     }
-    const contents = await Content.find({ author: user._id }).populate([
-      { path: "author", model: User },
-      { path: "tags", model: Tag },
-    ]);
+    const contents = await Content.find({ author: user._id })
+      .populate([
+        { path: "author", model: User },
+        { path: "tags", model: Tag },
+      ])
+      .skip(skipAmount)
+      .limit(pageSize);
 
-    return contents;
+    const sumContents = await Content.countDocuments({ author: user._id });
+    return { contents, sumContents };
   } catch (error) {
     console.log(error);
     throw error;

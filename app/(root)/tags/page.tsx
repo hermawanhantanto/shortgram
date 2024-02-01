@@ -13,6 +13,7 @@ const Page = async ({ searchParams }: URLProps) => {
     orderBy: searchParams.orderBy,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     pageSize: 10,
+    q: searchParams.q,
   });
 
   return (

@@ -15,6 +15,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
     orderBy: searchParams.orderBy,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     pageSize: 10,
+    q: searchParams.q,
   });
   return (
     <section className="flex w-full flex-col">
