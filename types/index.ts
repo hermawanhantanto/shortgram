@@ -163,3 +163,10 @@ export interface GetGlobalSearchParams {
 export interface GetMedalsParams {
   userId: string;
 }
+
+export interface GetRecommendationParams {
+  userId: string;
+  page?: number;
+  pageSize?: number;
+  q?: string;
+}

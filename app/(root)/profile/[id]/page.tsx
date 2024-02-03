@@ -20,13 +20,16 @@ import { getMedals } from "@/lib/action/general.action";
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId } = auth();
   const user = await getUserByClerkId(params.id);
+
+  if (!user) return <NoResult />;
+
   const currentUser = await getUserByClerkId(userId!);
   const { contents, sumContents } = await getContentByAuthor({
-    userId: params.id,
+    userId: user.clerkId,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     pageSize: 10,
   });
-  const { gold, silver, bronze } = await getMedals({ userId: params.id });
+  const { gold, silver, bronze } = await getMedals({ userId: user.clerkId });
 
   const result = await getContentSaved({
     userId: params.id,
@@ -35,7 +38,6 @@ const Page = async ({ params, searchParams }: URLProps) => {
   });
   const sumComment = await countComments({ userId: currentUser._id });
 
-  if (!user) return <NoResult />;
   return (
     <section className="flex w-full flex-col">
       <div className="flex justify-between max-sm:flex-col-reverse">

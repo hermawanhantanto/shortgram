@@ -5,17 +5,37 @@ import ContentCard from "@/components/shared/cards/ContentCard";
 import SearchBar from "@/components/shared/search/SearchBar";
 import { homeFilter } from "@/constant";
 import { getAllContents } from "@/lib/action/content.action";
+import { getRecommendation } from "@/lib/action/general.action";
 import { timeAgo } from "@/lib/utils";
 import { URLProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default async function Home({ searchParams }: URLProps) {
-  const { contents, sumContents } = await getAllContents({
-    orderBy: searchParams.orderBy,
-    page: searchParams.page ? parseInt(searchParams.page) : 1,
-    pageSize: 10,
-    q: searchParams.q,
-  });
+  const { userId } = auth();
+
+  let contents = [];
+  let sumContents = 0;
+
+  if (userId && searchParams.orderBy === "recommended") {
+    const result = await getRecommendation({
+      userId,
+      page: searchParams.page ? parseInt(searchParams.page) : 1,
+      pageSize: 10,
+      q: searchParams.q,
+    });
+    contents = result.contents;
+    sumContents = result.sumContents;
+  } else {
+    const result = await getAllContents({
+      orderBy: searchParams.orderBy,
+      page: searchParams.page ? parseInt(searchParams.page) : 1,
+      pageSize: 10,
+      q: searchParams.q,
+    });
+    contents = result.contents;
+    sumContents = result.sumContents;
+  }
 
   return (
     <section className="flex w-full flex-col">

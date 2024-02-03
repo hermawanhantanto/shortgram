@@ -14,8 +14,8 @@ const RightSideBar = async () => {
         {topUsers.map((user) => (
           <Link
             className="flex items-center gap-4"
-            key={user.id}
-            href={`/profile/${user.id}`}
+            key={user.clerkId}
+            href={`/profile/${user.clerkId}`}
           >
             <Avatar className="size-8">
               <AvatarImage src={user.picture} />

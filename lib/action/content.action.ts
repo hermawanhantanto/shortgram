@@ -125,12 +125,30 @@ export async function likeContent(params: LikeContentParams) {
   try {
     connectDB();
     const { contentId, userId, hasLiked, path } = params;
-    const content = await Content.findById(contentId);
+    const content = await Content.findById(contentId).populate({
+      path: "tags",
+      model: Tag,
+    });
 
     if (hasLiked) {
       await content.updateOne({ $pull: { like: userId } });
     } else {
       await content.updateOne({ $push: { like: userId } });
+      const hasInteraction = await Interaction.findOne({
+        user: userId,
+        content: contentId,
+        action: "like",
+        tags: content.tags,
+      });
+
+      if (!hasInteraction) {
+        await Interaction.create({
+          user: userId,
+          content: contentId,
+          action: "like",
+          tags: content.tags,
+        });
+      }
     }
 
     revalidatePath(path);
