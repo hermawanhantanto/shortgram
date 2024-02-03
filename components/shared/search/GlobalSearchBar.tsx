@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import GlobalResult from "./GlobalResult";
 import { formUrlQueryParams, removeUrlQueryParams } from "@/lib/utils";
 
@@ -12,6 +12,25 @@ const GlobalSearchBar = () => {
 
   const query = searchParams.get("q");
   const [search, setSearch] = useState(query || "");
+  const pathname = usePathname();
+  const container = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e: any) => {
+      if (
+        container.current &&
+        // @ts-ignore
+        !container.current.contains(e.target)
+      ) {
+        setSearch("");
+      }
+    };
+
+    setSearch("");
+    document.addEventListener("click", handleClick);
+
+    return () => document.removeEventListener("click", handleClick);
+  }, [pathname]);
 
   useEffect(() => {
     if (search) {
@@ -35,7 +54,7 @@ const GlobalSearchBar = () => {
   }, [search, router, searchParams, query]);
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col" ref={container}>
       <div className="flex gap-2 rounded-xl bg-secondary px-5 py-1.5 shadow max-sm:hidden">
         <Input
           onChange={(e) => setSearch(e.target.value)}
