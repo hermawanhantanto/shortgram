@@ -15,6 +15,7 @@ import ContentCard from "@/components/shared/cards/ContentCard";
 import { timeAgo } from "@/lib/utils";
 import { countComments } from "@/lib/action/comment.action";
 import Paginate from "@/components/shared/Paginate";
+import { getMedals } from "@/lib/action/general.action";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId } = auth();
@@ -25,6 +26,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     pageSize: 10,
   });
+  const { gold, silver, bronze } = await getMedals({ userId: params.id });
 
   const result = await getContentSaved({
     userId: params.id,
@@ -32,7 +34,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
     pageSize: 10,
   });
   const sumComment = await countComments({ userId: currentUser._id });
-  console.log(result);
+
   if (!user) return <NoResult />;
   return (
     <section className="flex w-full flex-col">
@@ -85,9 +87,9 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </h2>
       <div className="mt-10">
         <Stats
-          gold={10}
-          silver={10}
-          bronze={10}
+          gold={gold}
+          silver={silver}
+          bronze={bronze}
           comments={sumComment}
           contents={contents.length}
         />

@@ -159,3 +159,7 @@ export interface GetAllTagsParams {
 export interface GetGlobalSearchParams {
   globalSearch: string;
 }
+
+export interface GetMedalsParams {
+  userId: string;
+}

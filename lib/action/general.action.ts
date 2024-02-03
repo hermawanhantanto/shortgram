@@ -1,5 +1,5 @@
 "use server";
-import { GetGlobalSearchParams } from "@/types";
+import { GetGlobalSearchParams, GetMedalsParams } from "@/types";
 import { connectDB } from "../mongoose";
 import Content from "@/database/content.model";
 import Tag from "@/database/tags.model";
@@ -43,6 +43,25 @@ export async function getGlobalSearch(params: GetGlobalSearchParams) {
     }
 
     return JSON.stringify(results);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getMedals(params: GetMedalsParams) {
+  try {
+    connectDB();
+    const { userId } = params;
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) throw new Error("User not found");
+
+    const gold = Math.floor(user.follower.length / 100);
+    const silver = Math.floor((user.follower.length % 100) / 10);
+    const bronze = Math.floor((user.follower.length % 10) / 1);
+
+    return { gold, silver, bronze };
   } catch (error) {
     console.log(error);
     throw error;
