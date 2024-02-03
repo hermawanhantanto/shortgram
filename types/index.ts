@@ -155,3 +155,7 @@ export interface GetAllTagsParams {
   orderBy?: string;
   pageSize?: number;
 }
+
+export interface GetGlobalSearchParams {
+  globalSearch: string;
+}
