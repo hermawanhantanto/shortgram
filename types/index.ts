@@ -22,7 +22,7 @@ export interface UpdateUserParams {
   clerkId: string;
   updateData: {
     name?: string;
-    username?: string;
+    username?: string | null;
     email?: string;
     picture?: string;
     bio?: string;

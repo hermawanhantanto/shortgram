@@ -1,4 +1,7 @@
 "use server";
+import Content from "@/database/content.model";
+import Tag from "@/database/tags.model";
+import User from "@/database/user.model";
 import {
   CreateUserParams,
   DeleteUserParams,
@@ -7,13 +10,9 @@ import {
   GetContentsSavedParams,
   UpdateUserParams,
 } from "@/types";
-import { connectDB } from "../mongoose";
-import User from "@/database/user.model";
-import { revalidatePath } from "next/cache";
-import Content from "@/database/content.model";
-import Tag from "@/database/tags.model";
 import { FilterQuery } from "mongoose";
-import { match } from "assert";
+import { revalidatePath } from "next/cache";
+import { connectDB } from "../mongoose";
 
 export async function createUser(params: CreateUserParams) {
   try {

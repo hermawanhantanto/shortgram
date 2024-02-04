@@ -11,9 +11,11 @@ const Navbar = () => {
     <nav className="relative top-0 flex items-center justify-between border-b border-b-slate-100 p-5 dark:border-b-zinc-900">
       <div className="flex items-center gap-4">
         <MobileNav />
-        <h1 className="h1-bold max-md:h3-bold">
-          Short<span className="text-primary">gram</span>
-        </h1>
+        <Link href="/">
+          <h1 className="h1-bold max-md:h3-bold">
+            Short<span className="text-primary">gram</span>
+          </h1>
+        </Link>
       </div>
 
       <GlobalSearchBar />

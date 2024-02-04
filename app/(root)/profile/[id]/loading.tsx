@@ -1,11 +1,4 @@
-import FollowBtn from "@/components/shared/FollowBtn";
-import Metric from "@/components/shared/Metric";
 import { Skeleton } from "@/components/ui/skeleton";
-import { currentUser } from "@clerk/nextjs";
-import { format } from "date-fns";
-import { Stats } from "fs";
-import { Link } from "lucide-react";
-import React from "react";
 
 const Loading = () => {
   return (
