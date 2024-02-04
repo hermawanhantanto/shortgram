@@ -36,7 +36,7 @@ export async function createComments(params: CreateCommentParams) {
 export async function getAllCommentsContent(params: GetAllCommentsContent) {
   try {
     connectDB();
-    const { contentId, page = 1, pageSize = 10, orderBy } = params;
+    const { contentId, orderBy } = params;
     let filter: FilterQuery<typeof Comment> = {};
     switch (orderBy) {
       case "newest":
