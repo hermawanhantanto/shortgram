@@ -1,0 +1,24 @@
+import { Skeleton } from "@/components/ui/skeleton";
+import React from "react";
+
+const Loading = () => {
+  return (
+    <section>
+      <h1 className="h1-bold text-primary max-sm:mt-8">All Users</h1>
+      <div className="mt-10 flex w-full gap-6 max-sm:flex-col sm:items-center sm:justify-between">
+        <div className="max-w-[600px] flex-1">
+          <Skeleton className="h-[46px] min-w-full rounded-full" />
+        </div>
+
+        <Skeleton className="h-[46px]  w-[200px] rounded-full" />
+      </div>
+      <div className="mt-10 flex flex-wrap gap-6">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, index) => (
+          <Skeleton key={index} className="h-[200px] w-[250px] rounded-xl" />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default Loading;
